@@ -1,6 +1,7 @@
 #include "Core/Core.h"
 #include "Core/WinApp.h"
 #include "Core/Windows/Window.h"
+#include "Core/Windows/Controls/Button.h"
 #include <windows.h>
 #include <fstream>
 #include <string>
@@ -64,6 +65,11 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     Core::Window mainWindow{ hInst,       IDC_ARROW, COLOR_WINDOW, L"myWindowClass",
                              L"My Title", 100,       100,          800,
                              900,         nullptr };
+
+    Core::Button openFileButon{
+        L"Button", L"Open File",           WS_VISIBLE | WS_CHILD, 10, 10, 150,
+        36,        mainWindow.getHandle(), OPEN_FILE_BUTTON
+    };
 
     return Core::WinApp::run();
 }

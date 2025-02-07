@@ -18,17 +18,17 @@ Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring classN
         std::cerr << "Failed to register class\n";
     }
 
-    CreateWindow(m_wc.lpszClassName,
-                 reinterpret_cast<wchar_t*>(windowName.data()),
-                 WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-                 x,
-                 y,
-                 width,
-                 height,
-                 hwndParent,
-                 nullptr,
-                 nullptr,
-                 nullptr);
+    m_hwnd = CreateWindow(m_wc.lpszClassName,
+                          reinterpret_cast<wchar_t*>(windowName.data()),
+                          WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+                          x,
+                          y,
+                          width,
+                          height,
+                          hwndParent,
+                          nullptr,
+                          nullptr,
+                          nullptr);
 }
 
 LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
