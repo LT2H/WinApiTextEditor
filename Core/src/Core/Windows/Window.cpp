@@ -41,21 +41,21 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             break;
 
         case WM_COMMAND:
-            /*switch (wp)
-            {
-            case OPEN_FILE_BUTTON:
-            {
-                openFile(hwnd);
-                break;
-            }
+            /*  switch (wp)
+              {
+              case OPEN_FILE_BUTTON:
+              {
+                  openFile(hwnd);
+                  break;
+              }
 
-            case SAVE_FILE_BUTTON:
-                saveFile(hwnd);
-                break;
+              case SAVE_FILE_BUTTON:
+                  saveFile(hwnd);
+                  break;
 
-            default:
-                break;
-            }*/
+              default:
+                  break;
+              }*/
 
             break;
 

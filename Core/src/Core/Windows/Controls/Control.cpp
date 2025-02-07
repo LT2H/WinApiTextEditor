@@ -1,4 +1,4 @@
-#include "Button.h"
+#include "Control.h"
 
 #include <windows.h>
 
@@ -6,8 +6,8 @@
 
 namespace Core
 {
-Button::Button(std::wstring className, std::wstring windowName, DWORD style, int x,
-               int y, int width, int height, HWND hwndParent, int id)
+Control::Control(std::wstring className, std::wstring windowName, DWORD style, int x,
+                 int y, int width, int height, HWND hwndParent, int id)
 {
     CreateWindow(className.data(),
                  windowName.data(),

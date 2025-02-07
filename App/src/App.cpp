@@ -1,7 +1,7 @@
 #include "Core/Core.h"
 #include "Core/WinApp.h"
 #include "Core/Windows/Window.h"
-#include "Core/Windows/Controls/Button.h"
+#include "Core/Windows/Controls/Control.h"
 #include <windows.h>
 #include <fstream>
 #include <string>
@@ -66,10 +66,27 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                              L"My Title", 100,       100,          800,
                              900,         nullptr };
 
-    Core::Button openFileButon{
+    Core::Control openFileButon{
         L"Button", L"Open File",           WS_VISIBLE | WS_CHILD, 10, 10, 150,
         36,        mainWindow.getHandle(), OPEN_FILE_BUTTON
     };
+
+    Core::Control saveFileButon{
+        L"Button", L"Save File",           WS_VISIBLE | WS_CHILD, 170, 10, 150,
+        36,        mainWindow.getHandle(), SAVE_FILE_BUTTON
+    };
+
+    Core::Control editFileButon{ L"Edit",
+                                 L"",
+                                 WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
+                                     ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL |
+                                     WS_HSCROLL,
+                                 10,
+                                 50,
+                                 400,
+                                 300,
+                                 mainWindow.getHandle(),
+                                 0 };
 
     return Core::WinApp::run();
 }
