@@ -13,6 +13,10 @@ int displayFile(const std::wstring& path);
 
 void openFile(HWND hwnd);
 
+int writeFile(const std::wstring& path);
+
+void saveFile(HWND hwnd);
+
 constexpr int OPEN_FILE_BUTTON{ 1 };
 constexpr int SAVE_FILE_BUTTON{ 2 };
 
@@ -71,6 +75,11 @@ LRESULT windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             openFile(hwnd);
             break;
         }
+
+        case SAVE_FILE_BUTTON:
+            saveFile(hwnd);
+            break;
+
         default:
             break;
         }
@@ -161,5 +170,46 @@ void openFile(HWND hwnd)
     {
         MessageBox(nullptr, fileName.data(), L"Selected File", MB_OK);
         displayFile(ofn.lpstrFile);
+    }
+}
+
+int writeFile(const std::wstring& path)
+{
+    std::wofstream outfile(path, std::ios::binary);
+    if (!outfile)
+    {
+        MessageBox(
+            nullptr, L"Uh oh, could not open file!", L"Error", MB_OK | MB_ICONERROR);
+        return -1;
+    }
+
+    int editLength{ GetWindowTextLength(hEdit) + 1 };
+
+    std::vector<wchar_t> data(editLength);
+
+    GetWindowText(hEdit, data.data(), editLength);
+
+    std::wstringstream buffer{};
+    buffer << data.data();
+
+    outfile << buffer.str();
+}
+
+void saveFile(HWND hwnd)
+{
+    OPENFILENAME ofn{};
+    std::vector<wchar_t> fileName(100, L'\0'); // Initialize with null characters
+
+    ofn.lStructSize  = sizeof(OPENFILENAME);
+    ofn.hwndOwner    = hwnd;
+    ofn.lpstrFile    = fileName.data();
+    ofn.nMaxFile     = static_cast<DWORD>(fileName.size());
+    ofn.lpstrFilter  = L"All Files\0*.*\0Source Files\0*.CPP\0Text Files\0*.TXT\0";
+    ofn.nFilterIndex = 1;
+
+    if (GetSaveFileName(&ofn))
+    {
+        MessageBox(nullptr, fileName.data(), L"Saved File To", MB_OK);
+        writeFile(ofn.lpstrFile);
     }
 }
