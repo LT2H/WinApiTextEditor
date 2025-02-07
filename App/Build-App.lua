@@ -26,6 +26,7 @@ project "App"
    filter "system:windows"
        systemversion "latest"
        defines { "WINDOWS" }
+	   buildoptions {"/W4", "/w44365"}
 
    filter "configurations:Debug"
        defines { "DEBUG" }

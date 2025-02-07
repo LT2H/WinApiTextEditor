@@ -18,6 +18,7 @@ project "Core"
    filter "system:windows"
        systemversion "latest"
        defines { }
+	   buildoptions {"/W4", "/w44365"}
 
    filter "configurations:Debug"
        defines { "DEBUG" }
