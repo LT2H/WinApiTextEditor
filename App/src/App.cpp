@@ -1,9 +1,9 @@
 #include "Core/Core.h"
 #include <windows.h>
 
-LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
+LRESULT windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
 
-void AddControls(HWND hwnd);
+void addControls(HWND hwnd);
 
 constexpr int OPEN_FILE_BUTTON{ 1 };
 constexpr int SAVE_FILE_BUTTON{ 2 };
@@ -20,7 +20,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     wc.hCursor       = LoadCursor(nullptr, IDC_ARROW);
     wc.hInstance     = hInst;
     wc.lpszClassName = L"myWindowClass";
-    wc.lpfnWndProc   = WindowProc;
+    wc.lpfnWndProc   = windowProc;
 
     if (!RegisterClass(&wc))
         return -1;
@@ -47,12 +47,12 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     return 0;
 }
 
-LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
+LRESULT windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 {
     switch (msg)
     {
     case WM_CREATE:
-        AddControls(hwnd);
+        addControls(hwnd);
         break;
 
     case WM_DESTROY:
@@ -64,7 +64,7 @@ LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     }
 }
 
-void AddControls(HWND hwnd)
+void addControls(HWND hwnd)
 {
     CreateWindow(L"Button",
                  L"Open File",
