@@ -1,4 +1,5 @@
 #include "Core/Core.h"
+#include "Core/WinApp.h"
 #include <windows.h>
 #include <fstream>
 #include <string>
@@ -49,14 +50,14 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                                nullptr,
                                nullptr);
 
-    MSG msg{};
+    /*MSG msg{};
     while (GetMessage(&msg, nullptr, 0, 0))
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
-    }
+    }*/
 
-    return 0;
+    return Core::WinApp::run();
 }
 
 LRESULT windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
