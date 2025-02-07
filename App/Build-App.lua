@@ -5,14 +5,14 @@ project "App"
    targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "Source/**.h", "Source/**.cpp" }
+   files { "src/**.h", "src/**.cpp" }
 
    includedirs
    {
-      "Source",
+      "src",
 
 	  -- Include Core
-	  "../Core/Source"
+	  "../Core/src"
    }
 
    links
@@ -37,9 +37,3 @@ project "App"
        runtime "Release"
        optimize "On"
        symbols "On"
-
-   filter "configurations:Dist"
-       defines { "DIST" }
-       runtime "Release"
-       optimize "On"
-       symbols "Off"
