@@ -1,5 +1,6 @@
 #include "Core/Core.h"
 #include "Core/WinApp.h"
+#include "Core/Windows/Window.h"
 #include <windows.h>
 #include <fstream>
 #include <string>
@@ -26,8 +27,7 @@ HWND hEdit{};
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow)
 {
-    // MessageBox(nullptr, L"HELLO", L"My title", MB_OK);
-    WNDCLASSW wc{};
+    /*WNDCLASSW wc{};
 
     wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW);
     wc.hCursor       = LoadCursor(nullptr, IDC_ARROW);
@@ -48,53 +48,61 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                                nullptr,
                                nullptr,
                                nullptr,
-                               nullptr);
+                               nullptr);*/
 
-    /*MSG msg{};
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }*/
+    /*Window::Window(HINSTANCE hInst,
+                   LPCWSTR cursorId,
+                   HBRUSH color,
+                   std::wstring className,
+                   std::wstring windowName,
+                   int x,
+                   int y,
+                   int width,
+                   int height,
+                   HWND hwndParent)*/
+
+    Core::Window mainWindow{ hInst,       IDC_ARROW, COLOR_WINDOW, L"myWindowClass",
+                             L"My Title", 100,       100,          800,
+                             900,         nullptr };
 
     return Core::WinApp::run();
 }
 
-LRESULT windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
-{
-    switch (msg)
-    {
-    case WM_CREATE:
-        addControls(hwnd);
-        break;
-
-    case WM_COMMAND:
-        switch (wp)
-        {
-        case OPEN_FILE_BUTTON:
-        {
-            openFile(hwnd);
-            break;
-        }
-
-        case SAVE_FILE_BUTTON:
-            saveFile(hwnd);
-            break;
-
-        default:
-            break;
-        }
-
-        break;
-
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-
-    default:
-        return DefWindowProc(hwnd, msg, wp, lp);
-    }
-}
+// LRESULT windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
+//{
+//     switch (msg)
+//     {
+//     case WM_CREATE:
+//         addControls(hwnd);
+//         break;
+//
+//     case WM_COMMAND:
+//         switch (wp)
+//         {
+//         case OPEN_FILE_BUTTON:
+//         {
+//             openFile(hwnd);
+//             break;
+//         }
+//
+//         case SAVE_FILE_BUTTON:
+//             saveFile(hwnd);
+//             break;
+//
+//         default:
+//             break;
+//         }
+//
+//         break;
+//
+//     case WM_DESTROY:
+//         PostQuitMessage(0);
+//         break;
+//
+//     default:
+//         return DefWindowProc(hwnd, msg, wp, lp);
+//     }
+// }
 
 void addControls(HWND hwnd)
 {
