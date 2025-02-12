@@ -16,15 +16,16 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     Core::Window mainWindow{ hInst,       IDC_ARROW, COLOR_WINDOW, L"myWindowClass",
                              L"My Title", 100,       100,          800,
                              900,         nullptr };
+    auto mainWindowHwnd{ mainWindow.getHandle() };
 
     Core::Control openFileButon{
-        L"Button", L"Open File",           WS_VISIBLE | WS_CHILD,  10, 10, 150,
-        36,        mainWindow.getHandle(), Core::Command::openFile
+        L"Button", L"Open File",   WS_VISIBLE | WS_CHILD,  10, 10, 150,
+        36,        mainWindowHwnd, Core::Command::openFile
     };
 
     Core::Control saveFileButon{
-        L"Button", L"Save File",           WS_VISIBLE | WS_CHILD,  170, 10, 150,
-        36,        mainWindow.getHandle(), Core::Command::saveFile
+        L"Button", L"Save File",   WS_VISIBLE | WS_CHILD,  170, 10, 150,
+        36,        mainWindowHwnd, Core::Command::saveFile
     };
 
     Core::Control editField{ L"Edit",
@@ -36,12 +37,15 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                              50,
                              400,
                              300,
-                             mainWindow.getHandle() };
+                             mainWindowHwnd };
 
-    auto mainWindowHwnd{ mainWindow.getHandle() };
     openFileButon.addHandler(Core::Command::openFile,
                              [mainWindowHwnd, editField]()
                              { openFile(mainWindowHwnd, editField); });
+
+    saveFileButon.addHandler(Core::Command::saveFile,
+                             [mainWindowHwnd, editField]()
+                             { saveFile(mainWindowHwnd, editField); });
 
     mainWindow.addControl(openFileButon);
     mainWindow.addControl(saveFileButon);

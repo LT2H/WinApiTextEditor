@@ -37,3 +37,44 @@ void openFile(HWND hwnd, const Core::Control& editField)
         displayFile(ofn.lpstrFile, editField);
     }
 }
+
+void saveFile(HWND hwnd, const Core::Control& editField)
+{
+    OPENFILENAME ofn{};
+    std::vector<wchar_t> fileName(100, L'\0'); // Initialize with null characters
+
+    ofn.lStructSize  = sizeof(OPENFILENAME);
+    ofn.hwndOwner    = hwnd;
+    ofn.lpstrFile    = fileName.data();
+    ofn.nMaxFile     = static_cast<DWORD>(fileName.size());
+    ofn.lpstrFilter  = L"All Files\0*.*\0Source Files\0*.CPP\0Text Files\0*.TXT\0";
+    ofn.nFilterIndex = 1;
+
+    if (GetSaveFileName(&ofn))
+    {
+        MessageBox(nullptr, fileName.data(), L"Saved File To", MB_OK);
+        writeFile(ofn.lpstrFile, editField);
+    }
+}
+
+int writeFile(const std::wstring& path, const Core::Control& editField)
+{
+    std::wofstream outfile(path, std::ios::binary);
+    if (!outfile)
+    {
+        MessageBox(
+            nullptr, L"Uh oh, could not open file!", L"Error", MB_OK | MB_ICONERROR);
+        return -1;
+    }
+
+    int editLength{ GetWindowTextLength(editField.getHwnd()) + 1 };
+
+    std::vector<wchar_t> data(editLength);
+
+    GetWindowText(editField.getHwnd(), data.data(), editLength);
+
+    std::wstringstream buffer{};
+    buffer << data.data();
+
+    outfile << buffer.str();
+}
