@@ -11,4 +11,6 @@ enum class Command
     saveFile,
 };
 
+void enableDebugConsole();
+
 } // namespace Core
