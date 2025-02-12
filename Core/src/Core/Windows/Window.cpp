@@ -1,8 +1,11 @@
 #include "Window.h"
+#include "Core/Utils/utils.h"
 #include <string>
 #include <iostream>
 namespace Core
 {
+std::vector<Control> Window::m_controls{};
+
 Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring className,
                std::wstring windowName, int x, int y, int width, int height,
                HWND hwndParent)
@@ -31,13 +34,39 @@ Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring classN
                           nullptr);
 }
 
+void Window::addControl(const Control& control) { m_controls.push_back(control); }
+
+void Window::createControls()
+{
+    for (const auto& control : m_controls)
+    {
+        CreateWindow(control.getClassName().data(),
+                     control.getWindowName().data(),
+                     control.getStyle(),
+                     control.getX(),
+                     control.getY(),
+                     control.getWidth(),
+                     control.getHeight(),
+                     control.getHwndParent(),
+                     reinterpret_cast<HMENU>(control.getId()),
+                     nullptr,
+                     nullptr);
+    }
+}
+
 LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 {
     {
         switch (msg)
         {
         case WM_CREATE:
-            // addControls(hwnd);
+            // createControls();
+            // Post a custom message to register controls after WM_CREATE
+            PostMessage(hwnd, WM_CREATE_CONTROLS, 0, 0);
+            break;
+
+        case WM_CREATE_CONTROLS:
+            createControls();
             break;
 
         case WM_COMMAND:

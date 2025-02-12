@@ -76,17 +76,21 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
         36,        mainWindow.getHandle(), SAVE_FILE_BUTTON
     };
 
-    Core::Control editFileButon{ L"Edit",
-                                 L"",
-                                 WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
-                                     ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL |
-                                     WS_HSCROLL,
-                                 10,
-                                 50,
-                                 400,
-                                 300,
-                                 mainWindow.getHandle(),
-                                 0 };
+    Core::Control editField{ L"Edit",
+                             L"",
+                             WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
+                                 ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL |
+                                 WS_HSCROLL,
+                             10,
+                             50,
+                             400,
+                             300,
+                             mainWindow.getHandle(),
+                             0 };
+
+    mainWindow.addControl(openFileButon);
+    mainWindow.addControl(saveFileButon);
+    mainWindow.addControl(editField);
 
     return Core::WinApp::run();
 }
