@@ -43,10 +43,10 @@ void Window::addControl(const Control& control)
 
 void Window::createControls()
 {
-    for (auto& control : m_controls)
-    {
-        control.second.create();
-    }
+    /*  for (auto& control : m_controls)
+      {
+          control.second.create();
+      }*/
 }
 
 LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
@@ -61,7 +61,7 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             break;
 
         case WM_CREATE_CONTROLS:
-            createControls();
+            // createControls();
             break;
 
         case WM_COMMAND:

@@ -12,17 +12,17 @@ Control::Control(std::wstring className, std::wstring windowName, DWORD style, i
       m_x{ x }, m_y{ y }, m_width{ width }, m_height{ height },
       m_hwndParent{ hwndParent }, m_command{ command }
 {
-    /*  CreateWindow(className.data(),
-                   windowName.data(),
-                   style,
-                   x,
-                   y,
-                   width,
-                   height,
-                   hwndParent,
-                   reinterpret_cast<HMENU>(id),
-                   nullptr,
-                   nullptr);*/
+    m_hwnd = CreateWindow(className.data(),
+                          windowName.data(),
+                          style,
+                          x,
+                          y,
+                          width,
+                          height,
+                          hwndParent,
+                          reinterpret_cast<HMENU>(command),
+                          nullptr,
+                          nullptr);
 }
 
 Control::Control(std::wstring className, std::wstring windowName, DWORD style, int x,
@@ -31,21 +31,33 @@ Control::Control(std::wstring className, std::wstring windowName, DWORD style, i
       m_x{ x }, m_y{ y }, m_width{ width }, m_height{ height },
       m_hwndParent{ hwndParent }
 {
-}
-
-void Control::create()
-{
-    m_hwnd = CreateWindow(m_className.data(),
-                          m_windowName.data(),
-                          m_style,
-                          m_x,
-                          m_y,
-                          m_width,
-                          m_height,
-                          m_hwndParent,
-                          reinterpret_cast<HMENU>(m_command),
+    m_hwnd = CreateWindow(className.data(),
+                          windowName.data(),
+                          style,
+                          x,
+                          y,
+                          width,
+                          height,
+                          hwndParent,
+                          0,
                           nullptr,
                           nullptr);
+
 }
+
+//void Control::create()
+//{
+//    m_hwnd = CreateWindow(m_className.data(),
+//                          m_windowName.data(),
+//                          m_style,
+//                          m_x,
+//                          m_y,
+//                          m_width,
+//                          m_height,
+//                          m_hwndParent,
+//                          reinterpret_cast<HMENU>(m_command),
+//                          nullptr,
+//                          nullptr);
+//}
 
 } // namespace Core

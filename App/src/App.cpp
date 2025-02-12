@@ -2,19 +2,20 @@
 #include "Core/WinApp.h"
 #include "Core/Windows/Window.h"
 #include "Core/Windows/Controls/Control.h"
+#include "TextEditor.h"
 #include <windows.h>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <vector>
 
-LRESULT windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
-
-void addControls(HWND hwnd);
-
-int displayFile(const std::wstring& path);
-
-void openFile(HWND hwnd);
+// LRESULT windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
+//
+// void addControls(HWND hwnd);
+//
+// int displayFile(const std::wstring& path);
+//
+// void openFile(HWND hwnd);
 
 int writeFile(const std::wstring& path);
 
@@ -62,6 +63,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                    int height,
                    HWND hwndParent)*/
 
+    Core::enableDebugConsole();
+
     Core::Window mainWindow{ hInst,       IDC_ARROW, COLOR_WINDOW, L"myWindowClass",
                              L"My Title", 100,       100,          800,
                              900,         nullptr };
@@ -70,14 +73,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
         L"Button", L"Open File",           WS_VISIBLE | WS_CHILD,  10, 10, 150,
         36,        mainWindow.getHandle(), Core::Command::openFile
     };
-
-    openFileButon.addHandler(Core::Command::openFile,
-                             [] {
-                                 MessageBox(nullptr,
-                                            L"Failed to open file!",
-                                            L"Error",
-                                            MB_OK | MB_ICONERROR);
-                             });
 
     Core::Control saveFileButon{
         L"Button", L"Save File",           WS_VISIBLE | WS_CHILD,  170, 10, 150,
@@ -94,6 +89,11 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                              400,
                              300,
                              mainWindow.getHandle() };
+
+    auto mainWindowHwnd{ mainWindow.getHandle() };
+    openFileButon.addHandler(Core::Command::openFile,
+                             [mainWindowHwnd, editField]()
+                             { openFile(mainWindowHwnd, editField); });
 
     mainWindow.addControl(openFileButon);
     mainWindow.addControl(saveFileButon);
@@ -180,42 +180,42 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 //                      nullptr);
 // }
 
-int displayFile(const std::wstring& path)
-{
-    std::wifstream file(path, std::ios::binary);
-    if (!file)
-    {
-        MessageBox(nullptr, L"Failed to open file!", L"Error", MB_OK | MB_ICONERROR);
-        return -1;
-    }
-
-    std::wstringstream buffer{};
-    buffer << file.rdbuf();
-
-    std::wstring content{};
-    content = buffer.str();
-
-    SetWindowText(hEdit, content.data());
-}
-
-void openFile(HWND hwnd)
-{
-    OPENFILENAME ofn{};
-    std::vector<wchar_t> fileName(100); // Initialize with null characters
-
-    ofn.lStructSize  = sizeof(OPENFILENAME);
-    ofn.hwndOwner    = hwnd;
-    ofn.lpstrFile    = fileName.data();
-    ofn.nMaxFile     = static_cast<DWORD>(fileName.size());
-    ofn.lpstrFilter  = L"All Files\0*.*\0Source Files\0*.CPP\0Text Files\0*.TXT\0";
-    ofn.nFilterIndex = 1;
-
-    if (GetOpenFileName(&ofn))
-    {
-        MessageBox(nullptr, fileName.data(), L"Selected File", MB_OK);
-        displayFile(ofn.lpstrFile);
-    }
-}
+// int displayFile(const std::wstring& path)
+//{
+//     std::wifstream file(path, std::ios::binary);
+//     if (!file)
+//     {
+//         MessageBox(nullptr, L"Failed to open file!", L"Error", MB_OK |
+//         MB_ICONERROR); return -1;
+//     }
+//
+//     std::wstringstream buffer{};
+//     buffer << file.rdbuf();
+//
+//     std::wstring content{};
+//     content = buffer.str();
+//
+//     SetWindowText(hEdit, content.data());
+// }
+//
+// void openFile(HWND hwnd)
+//{
+//     OPENFILENAME ofn{};
+//     std::vector<wchar_t> fileName(100); // Initialize with null characters
+//
+//     ofn.lStructSize  = sizeof(OPENFILENAME);
+//     ofn.hwndOwner    = hwnd;
+//     ofn.lpstrFile    = fileName.data();
+//     ofn.nMaxFile     = static_cast<DWORD>(fileName.size());
+//     ofn.lpstrFilter  = L"All Files\0*.*\0Source Files\0*.CPP\0Text
+//     Files\0*.TXT\0"; ofn.nFilterIndex = 1;
+//
+//     if (GetOpenFileName(&ofn))
+//     {
+//         MessageBox(nullptr, fileName.data(), L"Selected File", MB_OK);
+//         displayFile(ofn.lpstrFile);
+//     }
+// }
 
 int writeFile(const std::wstring& path)
 {

@@ -33,7 +33,7 @@ class Control
     explicit Control(std::wstring className, std::wstring windowName, DWORD style,
                      int x, int y, int width, int height, HWND hwndParent);
 
-    void create();
+    // void create();
 
     std::wstring getClassName() const { return m_className; }
     std::wstring getWindowName() const { return m_windowName; }
@@ -44,6 +44,7 @@ class Control
     int getHeight() const { return m_height; }
     HWND getHwndParent() const { return m_hwndParent; }
     Command getCommand() const { return m_command; }
+    HWND getHwnd() const { return m_hwnd; }
 
     void addHandler(const Command command, std::function<void()> handler)
     {
