@@ -1,11 +1,17 @@
 #pragma once
 #include <Core/Windows/Controls/Control.h>
+#include <Core/utils/utils.h>
 #include <windows.h>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace Core
 {
+
+constexpr int OPEN_FILE_BUTTON{ 1 };
+constexpr int SAVE_FILE_BUTTON{ 2 };
+
 class Window
 {
   public:
@@ -20,7 +26,8 @@ class Window
   private:
     WNDCLASS m_wc{};
     HWND m_hwnd{};
-    static std::vector<Control> m_controls;
+    static std::unordered_map<Command, Control> m_controls;
+    static std::unordered_map<int, HWND> m_control_handles;
 
     static void createControls();
 

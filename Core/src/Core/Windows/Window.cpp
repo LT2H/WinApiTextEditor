@@ -2,9 +2,11 @@
 #include "Core/Utils/utils.h"
 #include <string>
 #include <iostream>
+#include <unordered_map>
 namespace Core
 {
-std::vector<Control> Window::m_controls{};
+std::unordered_map<Command, Control> Window::m_controls{};
+// std::unordered_map<int, HWND> Window::m_control_handles{};
 
 Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring className,
                std::wstring windowName, int x, int y, int width, int height,
@@ -34,23 +36,16 @@ Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring classN
                           nullptr);
 }
 
-void Window::addControl(const Control& control) { m_controls.push_back(control); }
+void Window::addControl(const Control& control)
+{
+    m_controls[control.getCommand()] = control;
+}
 
 void Window::createControls()
 {
-    for (const auto& control : m_controls)
+    for (auto& control : m_controls)
     {
-        CreateWindow(control.getClassName().data(),
-                     control.getWindowName().data(),
-                     control.getStyle(),
-                     control.getX(),
-                     control.getY(),
-                     control.getWidth(),
-                     control.getHeight(),
-                     control.getHwndParent(),
-                     reinterpret_cast<HMENU>(control.getId()),
-                     nullptr,
-                     nullptr);
+        control.second.create();
     }
 }
 
@@ -70,6 +65,12 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             break;
 
         case WM_COMMAND:
+        {
+            Command command{ LOWORD(wp) };
+            if (m_controls.contains(command))
+            {
+                m_controls[command].handleCommand(command);
+            }
             /*  switch (wp)
               {
               case OPEN_FILE_BUTTON:
@@ -87,6 +88,7 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
               }*/
 
             break;
+        }
 
         case WM_DESTROY:
             PostQuitMessage(0);

@@ -20,8 +20,8 @@ int writeFile(const std::wstring& path);
 
 void saveFile(HWND hwnd);
 
-constexpr int OPEN_FILE_BUTTON{ 1 };
-constexpr int SAVE_FILE_BUTTON{ 2 };
+// constexpr int OPEN_FILE_BUTTON{ 1 };
+// constexpr int SAVE_FILE_BUTTON{ 2 };
 
 HWND hMainWindow{};
 HWND hEdit{};
@@ -67,13 +67,21 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                              900,         nullptr };
 
     Core::Control openFileButon{
-        L"Button", L"Open File",           WS_VISIBLE | WS_CHILD, 10, 10, 150,
-        36,        mainWindow.getHandle(), OPEN_FILE_BUTTON
+        L"Button", L"Open File",           WS_VISIBLE | WS_CHILD,  10, 10, 150,
+        36,        mainWindow.getHandle(), Core::Command::openFile
     };
 
+    openFileButon.addHandler(Core::Command::openFile,
+                             [] {
+                                 MessageBox(nullptr,
+                                            L"Failed to open file!",
+                                            L"Error",
+                                            MB_OK | MB_ICONERROR);
+                             });
+
     Core::Control saveFileButon{
-        L"Button", L"Save File",           WS_VISIBLE | WS_CHILD, 170, 10, 150,
-        36,        mainWindow.getHandle(), SAVE_FILE_BUTTON
+        L"Button", L"Save File",           WS_VISIBLE | WS_CHILD,  170, 10, 150,
+        36,        mainWindow.getHandle(), Core::Command::saveFile
     };
 
     Core::Control editField{ L"Edit",
@@ -85,8 +93,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                              50,
                              400,
                              300,
-                             mainWindow.getHandle(),
-                             0 };
+                             mainWindow.getHandle() };
 
     mainWindow.addControl(openFileButon);
     mainWindow.addControl(saveFileButon);
@@ -131,46 +138,47 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 //     }
 // }
 
-void addControls(HWND hwnd)
-{
-    CreateWindow(L"Button",
-                 L"Open File",
-                 WS_VISIBLE | WS_CHILD,
-                 10,
-                 10,
-                 150,
-                 36,
-                 hwnd,
-                 reinterpret_cast<HMENU>(OPEN_FILE_BUTTON),
-                 nullptr,
-                 nullptr);
-
-    CreateWindow(L"Button",
-                 L"Save File",
-                 WS_VISIBLE | WS_CHILD,
-                 170,
-                 10,
-                 150,
-                 36,
-                 hwnd,
-                 reinterpret_cast<HMENU>(SAVE_FILE_BUTTON),
-                 nullptr,
-                 nullptr);
-
-    hEdit =
-        CreateWindow(L"Edit",
-                     L"",
-                     WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
-                         ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL | WS_HSCROLL,
-                     10,
-                     50,
-                     400,
-                     300,
-                     hwnd,
-                     nullptr,
-                     nullptr,
-                     nullptr);
-}
+// void addControls(HWND hwnd)
+//{
+//     CreateWindow(L"Button",
+//                  L"Open File",
+//                  WS_VISIBLE | WS_CHILD,
+//                  10,
+//                  10,
+//                  150,
+//                  36,
+//                  hwnd,
+//                  reinterpret_cast<HMENU>(OPEN_FILE_BUTTON),
+//                  nullptr,
+//                  nullptr);
+//
+//     CreateWindow(L"Button",
+//                  L"Save File",
+//                  WS_VISIBLE | WS_CHILD,
+//                  170,
+//                  10,
+//                  150,
+//                  36,
+//                  hwnd,
+//                  reinterpret_cast<HMENU>(SAVE_FILE_BUTTON),
+//                  nullptr,
+//                  nullptr);
+//
+//     hEdit =
+//         CreateWindow(L"Edit",
+//                      L"",
+//                      WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
+//                          ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL |
+//                          WS_HSCROLL,
+//                      10,
+//                      50,
+//                      400,
+//                      300,
+//                      hwnd,
+//                      nullptr,
+//                      nullptr,
+//                      nullptr);
+// }
 
 int displayFile(const std::wstring& path)
 {
