@@ -1,0 +1,25 @@
+#include "Menu.h"
+
+namespace Core
+{
+Menu::Menu(HWND hwndParent, UINT flags, Command command, std::wstring windowName)
+    : m_hwndMenu{ CreateMenu() }
+{
+    m_hwndParent = hwndParent;
+    m_flags      = flags;
+    m_command    = command;
+    m_windowName = windowName;
+}
+
+void Menu::appendMenu(const Menu& menu)
+{
+    AppendMenu(m_hwndMenu,
+               menu.getFlags(),
+               reinterpret_cast<UINT_PTR>(menu.getHwndMenu()),
+               menu.getWindowName().c_str());
+}
+
+void Menu::setMenu() { SetMenu(m_hwndParent, m_hwndMenu); }
+
+
+} // namespace Core

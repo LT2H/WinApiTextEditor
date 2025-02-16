@@ -2,8 +2,11 @@
 #include "Core/WinApp.h"
 #include "Core/Windows/Window.h"
 #include "Core/Windows/Controls/Control.h"
+#include "Core/Windows/Controls/Menu.h"
 #include "TextEditor.h"
+
 #include <windows.h>
+
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -46,6 +49,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     saveFileButon.addHandler(Core::Command::saveFile,
                              [mainWindowHwnd, editField]()
                              { saveFile(mainWindowHwnd, editField); });
+
+    Core::Menu menu{ mainWindowHwnd, MF_STRING, Core::Command::openFile, L"Open" };
+    menu.setMenu();
 
     mainWindow.addControl(openFileButon);
     mainWindow.addControl(saveFileButon);
