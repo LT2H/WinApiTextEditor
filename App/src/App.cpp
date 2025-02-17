@@ -97,5 +97,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     mainWindow.addControl(saveFileButon);
     mainWindow.addControl(editField);
 
+    mainWindow.addMenu(menu);
+
     return Core::WinApp::run();
 }

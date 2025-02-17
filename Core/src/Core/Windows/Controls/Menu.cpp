@@ -32,23 +32,11 @@ void Menu::appendMenu(const Menu& menu)
                menu.getFlags(),
                reinterpret_cast<UINT_PTR>(menu.getHwndMenu()),
                menu.getWindowName().c_str());
+
+    addChild(menu);
 }
 
-void Menu::appendMenu()
-{
-    AppendMenu(m_hwndMenu,
-               m_flags,
-               reinterpret_cast<UINT_PTR>(m_hwndMenu),
-               m_windowName.c_str());
-}
-
-void Menu::appendMenu(UINT flags) { AppendMenu(m_hwndMenu, flags, 0, nullptr); }
-
-void Menu::appendMenu(UINT flags, Command command, std::wstring windowName)
-{
-    AppendMenu(
-        m_hwndMenu, flags, static_cast<UINT_PTR>(command), windowName.c_str());
-}
+void Menu::addChild(const Menu& menu) { m_menus[menu.getCommand()] = menu; }
 
 void Menu::setMenu() { SetMenu(m_hwndParent, m_hwndMenu); }
 

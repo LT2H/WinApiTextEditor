@@ -1,11 +1,13 @@
 #include "Window.h"
 #include "Core/Utils/utils.h"
+#include "Core/Windows/Controls/Menu.h"
 #include <string>
 #include <iostream>
 #include <unordered_map>
 namespace Core
 {
 std::unordered_map<Command, Control> Window::m_controls{};
+std::vector<Menu> Window::m_menus{};
 // std::unordered_map<int, HWND> Window::m_control_handles{};
 
 Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring className,
@@ -41,6 +43,8 @@ void Window::addControl(const Control& control)
     m_controls[control.getCommand()] = control;
 }
 
+void Window::addMenu(const Menu& menu) { m_menus.push_back(menu); }
+
 void Window::createControls()
 {
     /*  for (auto& control : m_controls)
@@ -71,6 +75,19 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             {
                 m_controls[command].handleCommand(command);
             }
+
+            for (auto& menu : m_menus)
+            {
+                if (menu.getCommand() == command)
+                {
+                    menu.handleCommand(command);
+                }
+            }
+
+            // if (m_menu.contains(command))
+            //{
+            //     // m_menu.handleCommand(command);
+            // }
             /*  switch (wp)
               {
               case OPEN_FILE_BUTTON:

@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/Windows/Controls/Control.h>
+#include <Core/Windows/Controls/Menu.h>
 #include <Core/utils/utils.h>
 #include <windows.h>
 #include <string>
@@ -23,11 +24,15 @@ class Window
 
     void addControl(const Control& control);
 
+    void addMenu(const Menu& menu);
+
   private:
     WNDCLASS m_wc{};
     HWND m_hwnd{};
     static std::unordered_map<Command, Control> m_controls;
     static std::unordered_map<int, HWND> m_control_handles;
+
+    static std::vector<Menu> m_menus;
 
     static void createControls();
 
