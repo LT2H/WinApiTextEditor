@@ -13,8 +13,17 @@ class Menu
 {
   public:
     Menu(HWND hwndParent, UINT flags, Command command, std::wstring windowName);
+    Menu(UINT flags, Command command, std::wstring windowName);
+    Menu(HWND hwndParent);
+    Menu(UINT flags);
 
     void appendMenu(const Menu& menu);
+
+    void appendMenu();
+
+    void appendMenu(UINT flags);
+
+    void appendMenu(UINT flags, Command command, std::wstring windowName);
 
     void setMenu();
 

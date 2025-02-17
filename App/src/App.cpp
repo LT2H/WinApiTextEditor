@@ -50,7 +50,47 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                              [mainWindowHwnd, editField]()
                              { saveFile(mainWindowHwnd, editField); });
 
-    Core::Menu menu{ mainWindowHwnd, MF_STRING, Core::Command::openFile, L"Open" };
+    /* Core::Menu fileMenu{ nullptr, MF_POPUP, Core::Command::openFile, L"File" };
+
+     Core::Menu subMenu{
+         mainWindowHwnd, MF_POPUP, Core::Command::openFile, L"Open SubMenu"
+     };
+     subMenu.appendMenu(MF_STRING, Core::Command::openFile, L"New");
+
+     fileMenu.appendMenu(MF_STRING, Core::Command::openFile, L"New");
+     fileMenu.appendMenu(subMenu);
+     fileMenu.appendMenu(MF_SEPARATOR);
+     fileMenu.appendMenu(MF_STRING, Core::Command::openFile, L"Exit");
+
+     Core::Menu menu{ mainWindowHwnd, MF_STRING, Core::Command::openFile, L"Help" };
+
+     menu.appendMenu(fileMenu);
+
+     menu.setMenu();*/
+
+    Core::Menu fileMenu{ MF_POPUP, Core::Command::openFile, L"File" };
+    Core::Menu newMenu{ MF_STRING, Core::Command::openFile, L"New" };
+
+    Core::Menu openSubMenu{ MF_POPUP, Core::Command::openFile, L"Open SubMenu" };
+    Core::Menu changeTitleSubMenu{ MF_STRING,
+                                   Core::Command::openFile,
+                                   L"Change Title" };
+    openSubMenu.appendMenu(changeTitleSubMenu);
+
+    Core::Menu seperator{ MF_SEPARATOR };
+    Core::Menu exitMenu{ MF_STRING, Core::Command::openFile, L"Exit" };
+
+    fileMenu.appendMenu(newMenu);
+    fileMenu.appendMenu(openSubMenu);
+    fileMenu.appendMenu(seperator);
+    fileMenu.appendMenu(exitMenu);
+
+    Core::Menu menu{ mainWindowHwnd };
+    menu.appendMenu(fileMenu);
+
+    Core::Menu helpMenu{ MF_STRING, Core::Command::openFile, L"Help" };
+    menu.appendMenu(helpMenu);
+
     menu.setMenu();
 
     mainWindow.addControl(openFileButon);
