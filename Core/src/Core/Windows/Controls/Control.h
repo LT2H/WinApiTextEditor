@@ -46,9 +46,9 @@ class Control
     Command getCommand() const { return m_command; }
     HWND getHwnd() const { return m_hwnd; }
 
-    void addHandler(const Command command, std::function<void()> handler)
+    void addHandler(std::function<void()> handler)
     {
-        m_commandHandlers[command].push_back(handler);
+        m_commandHandlers[m_command].push_back(handler);
     }
 
     void handleCommand(const Command command)

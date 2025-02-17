@@ -24,7 +24,7 @@ class Window
 
     void addControl(const Control& control);
 
-    void addMenu(const Menu& menu);
+    void addMenu(std::unique_ptr<Menu> menu);
 
   private:
     WNDCLASS m_wc{};
@@ -32,7 +32,7 @@ class Window
     static std::unordered_map<Command, Control> m_controls;
     static std::unordered_map<int, HWND> m_control_handles;
 
-    static std::vector<Menu> m_menus;
+    static std::vector<std::unique_ptr<Menu>> m_menus;
 
     static void createControls();
 

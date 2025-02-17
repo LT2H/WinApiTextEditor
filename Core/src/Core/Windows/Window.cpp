@@ -7,7 +7,7 @@
 namespace Core
 {
 std::unordered_map<Command, Control> Window::m_controls{};
-std::vector<Menu> Window::m_menus{};
+std::vector<std::unique_ptr<Menu>> Window::m_menus{};
 // std::unordered_map<int, HWND> Window::m_control_handles{};
 
 Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring className,
@@ -43,7 +43,10 @@ void Window::addControl(const Control& control)
     m_controls[control.getCommand()] = control;
 }
 
-void Window::addMenu(const Menu& menu) { m_menus.push_back(menu); }
+void Window::addMenu(std::unique_ptr<Menu> menu)
+{
+    m_menus.push_back(std::move(menu));
+}
 
 void Window::createControls()
 {
@@ -71,16 +74,29 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         case WM_COMMAND:
         {
             Command command{ LOWORD(wp) };
-            if (m_controls.contains(command))
+            if (command != Command::nothing && command != Command::openFile &&
+                command != Command::saveFile && command != Command::help)
             {
-                m_controls[command].handleCommand(command);
+                std::cout << "Unknown command received: " << wp << std::endl;
+                command = Command::nothing;
             }
 
-            for (auto& menu : m_menus)
+            std::cout << "Received WPARAM: " << wp
+                      << " (Command ID: " << static_cast<int>(command) << ")"
+                      << std::endl;
+
+
+            for (const auto& menu : m_menus)
             {
-                if (menu.getCommand() == command)
+                std::cout << "Menu command: " << static_cast<int>(menu->getCommand())
+                          << std::endl;
+                if (menu)
                 {
-                    menu.handleCommand(command);
+                    menu->handleCommand(command);
+                }
+                else
+                {
+                    std::cout << "Menu pointer is invalid!" << std::endl;
                 }
             }
 
