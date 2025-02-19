@@ -26,12 +26,11 @@ class Control
 
   public:
     Control() = default;
-    explicit Control(std::wstring className, std::wstring windowName, DWORD style,
-                     int x, int y, int width, int height, HWND hwndParent,
-                     Command command);
+    Control(std::wstring className, std::wstring windowName, DWORD style, int x,
+            int y, int width, int height, HWND hwndParent, Command command);
 
-    explicit Control(std::wstring className, std::wstring windowName, DWORD style,
-                     int x, int y, int width, int height, HWND hwndParent);
+    Control(std::wstring className, std::wstring windowName, DWORD style, int x,
+            int y, int width, int height, HWND hwndParent);
 
     // void create();
 
