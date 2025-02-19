@@ -8,7 +8,7 @@ namespace Core
 {
 std::unordered_map<Command, Control> Window::m_controls{};
 std::vector<std::unique_ptr<Menu>> Window::m_menus{};
-// std::unordered_map<int, HWND> Window::m_control_handles{};
+std::unordered_map<Command, std::function<void()>> Window::m_registered_funcs{};
 
 Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring className,
                std::wstring windowName, int x, int y, int width, int height,
@@ -56,6 +56,11 @@ void Window::createControls()
       }*/
 }
 
+void Window::registerFunc(Command command, std::function<void()> func)
+{
+    m_registered_funcs[command] = func;
+}
+
 LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 {
     {
@@ -74,42 +79,28 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         case WM_COMMAND:
         {
             Command command{ LOWORD(wp) };
-
-            std::cout << "Received WPARAM: " << wp
-                      << " (Command ID: " << static_cast<int>(command) << ")"
-                      << std::endl;
-
-            for (const auto& menu : m_menus)
+            auto it{ m_registered_funcs.find(command) };
+            if (it != m_registered_funcs.end())
             {
-                if (menu)
-                {
-                    menu->handleCommand(command);
-                }
-                else
-                {
-                    std::cout << "Menu pointer is invalid!" << std::endl;
-                }
+                it->second();
             }
 
-            // if (m_menu.contains(command))
+            // switch (command)
             //{
-            //     // m_menu.handleCommand(command);
+            // case Command::openFile:
+            //{
+            //     // openFile(hwnd);
+            //     std::cout << "Opening...\n";
+            //     break;
             // }
-            /*  switch (wp)
-              {
-              case OPEN_FILE_BUTTON:
-              {
-                  openFile(hwnd);
-                  break;
-              }
 
-              case SAVE_FILE_BUTTON:
-                  saveFile(hwnd);
-                  break;
+            // case Command::saveFile:
+            //     // saveFile(hwnd);
+            //     break;
 
-              default:
-                  break;
-              }*/
+            // default:
+            //     break;
+            // }
 
             break;
         }

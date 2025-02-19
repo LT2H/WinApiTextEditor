@@ -26,6 +26,8 @@ class Window
 
     void addMenu(std::unique_ptr<Menu> mainMenu);
 
+    void registerFunc(Command command, std::function<void()> func);
+
   private:
     WNDCLASS m_wc{};
     HWND m_hwnd{};
@@ -33,6 +35,8 @@ class Window
     static std::unordered_map<int, HWND> m_control_handles;
 
     static std::vector<std::unique_ptr<Menu>> m_menus;
+
+    static std::unordered_map<Command, std::function<void()>> m_registered_funcs;
 
     static void createControls();
 

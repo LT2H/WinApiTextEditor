@@ -13,6 +13,11 @@ Menu::Menu(UINT flags, Command command, std::wstring windowName)
 {
 }
 
+Menu::Menu(UINT flags, Menu menu, std::wstring windowName)
+    : m_hwndMenu{ CreateMenu() }, m_flags{ flags }, m_windowName{ windowName }
+{
+}
+
 Menu::Menu(HWND hwndParent, Command command)
     : m_hwndMenu{ CreateMenu() }, m_hwndParent{ hwndParent }, m_flags{ 0 },
       m_command{ command }
@@ -22,6 +27,8 @@ Menu::Menu(HWND hwndParent, Command command)
 Menu::Menu(HWND hwndParent) : m_hwndMenu{ CreateMenu() }, m_hwndParent{ hwndParent }
 {
 }
+
+Menu::Menu() : m_hwndMenu{ CreateMenu() } {}
 
 // Menu::Menu(UINT flags) : m_hwndMenu{ CreateMenu() } { m_flags = flags; }
 
@@ -81,12 +88,34 @@ void Menu::appendSelf()
                m_windowName.c_str());
 }
 
+void Menu::appendMenu(UINT flags, Command command, std::wstring_view windowName)
+{
+    m_flags      = flags;
+    m_command    = command;
+    m_windowName = windowName;
+
+    AppendMenu(m_hwndMenu,
+               m_flags,
+               // reinterpret_cast<UINT_PTR>(menu->getHwndMenu()),
+               static_cast<int>(m_command),
+               m_windowName.data());
+}
+
+void Menu::appendMenu(UINT flags, HMENU hMenu, std::wstring_view windowName)
+{
+    AppendMenu(m_hwndMenu,
+               flags,
+               reinterpret_cast<UINT_PTR>(hMenu),
+               // static_cast<int>(menu->getCommand()),
+               windowName.data());
+}
+
 void Menu::appendMenu(std::unique_ptr<Menu> menu)
 {
     AppendMenu(m_hwndMenu,
                menu->getFlags(),
-               // reinterpret_cast<UINT_PTR>(menu->getHwndMenu()),
-               static_cast<int>(menu->getCommand()),
+               reinterpret_cast<UINT_PTR>(menu->getHwndMenu()),
+               // static_cast<int>(menu->getCommand()),
                menu->getWindowName().c_str());
 
     addChild(std::move(menu));

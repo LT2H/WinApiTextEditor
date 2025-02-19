@@ -69,15 +69,31 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     //// fileMenu->appendMenu(seperator);
     // fileMenu->appendMenu(std::move(exitMenu));
 
+    Core::Control editField{ L"Edit",
+                             L"",
+                             WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
+                                 ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL |
+                                 WS_HSCROLL,
+                             10,
+                             50,
+                             400,
+                             300,
+                             mainWindowHwnd };
+
     auto mainMenu{ std::make_unique<Core::Menu>(mainWindowHwnd) };
 
-    auto helpMenu{ std::make_unique<Core::Menu>(
-        MF_STRING, Core::Command::help, L"Help") };
+    auto fileMenu{ std::make_unique<Core::Menu>() };
 
-    helpMenu->addHandler([]()
-                         { MessageBox(nullptr, L"HELLO", L"My title", MB_OK); });
+    auto subMenu{ std::make_unique<Core::Menu>() };
 
-    mainMenu->appendMenu(std::move(helpMenu));
+    auto helpMenu{ std::make_unique<Core::Menu>() };
+
+    fileMenu->appendMenu(MF_STRING, Core::Command::openFile, L"New");
+    mainWindow.registerFunc(Core::Command::openFile,
+                            [mainWindowHwnd, editField]()
+                            { openFile(mainWindowHwnd, editField); });
+
+    mainMenu->appendMenu(MF_POPUP, fileMenu->getHwndMenu(), L"File");
     /*helpMenu->appendSelf();
 
     mainMenu->appendMenu(std::move(helpMenu));
@@ -87,7 +103,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     /*  mainWindow.addControl(openFileButon);
       mainWindow.addControl(saveFileButon);
       mainWindow.addControl(editField);*/
-    mainWindow.addMenu(std::move(mainMenu));
 
     return Core::WinApp::run();
 }
