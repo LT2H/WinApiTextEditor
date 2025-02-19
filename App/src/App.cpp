@@ -21,90 +21,73 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                              900,         nullptr };
     auto mainWindowHwnd{ mainWindow.getHandle() };
 
-    Core::Control openFileButon{
-        L"Button", L"Open File",   WS_VISIBLE | WS_CHILD,  10, 10, 150,
-        36,        mainWindowHwnd, Core::Command::openFile
-    };
-
-    Core::Control saveFileButon{
-        L"Button", L"Save File",   WS_VISIBLE | WS_CHILD,  170, 10, 150,
-        36,        mainWindowHwnd, Core::Command::saveFile
-    };
-
-    Core::Control editField{ L"Edit",
-                             L"",
-                             WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
-                                 ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL |
-                                 WS_HSCROLL,
-                             10,
-                             50,
-                             400,
-                             300,
-                             mainWindowHwnd };
-
-    openFileButon.addHandler([mainWindowHwnd, editField]()
-                             { openFile(mainWindowHwnd, editField); });
-
-    saveFileButon.addHandler([mainWindowHwnd, editField]()
-                             { saveFile(mainWindowHwnd, editField); });
-
-    /* auto fileMenu{ nullptr, MF_POPUP, Core::Command::openFile, L"File" };
-
-     auto subMenu{
-         mainWindowHwnd, MF_POPUP, Core::Command::openFile, L"Open SubMenu"
+    /* Core::Control openFileButon{
+         L"Button", L"Open File",   WS_VISIBLE | WS_CHILD,  10, 10, 150,
+         36,        mainWindowHwnd, Core::Command::openFile
      };
-     subMenu.appendMenu(MF_STRING, Core::Command::openFile, L"New");
 
-     fileMenu.appendMenu(MF_STRING, Core::Command::openFile, L"New");
-     fileMenu.appendMenu(subMenu);
-     fileMenu.appendMenu(MF_SEPARATOR);
-     fileMenu.appendMenu(MF_STRING, Core::Command::openFile, L"Exit");
+     Core::Control saveFileButon{
+         L"Button", L"Save File",   WS_VISIBLE | WS_CHILD,  170, 10, 150,
+         36,        mainWindowHwnd, Core::Command::saveFile
+     };
 
-     auto menu{ mainWindowHwnd, MF_STRING, Core::Command::openFile, L"Help" };
+     Core::Control editField{ L"Edit",
+                              L"",
+                              WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
+                                  ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL |
+                                  WS_HSCROLL,
+                              10,
+                              50,
+                              400,
+                              300,
+                              mainWindowHwnd };
 
-     menu.appendMenu(fileMenu);
+     openFileButon.addHandler([mainWindowHwnd, editField]()
+                              { openFile(mainWindowHwnd, editField); });
 
-     menu.setMenu();*/
+     saveFileButon.addHandler([mainWindowHwnd, editField]()
+                              { saveFile(mainWindowHwnd, editField); });*/
 
-    auto fileMenu{ std::make_unique<Core::Menu>(
-        MF_POPUP, Core::Command::nothing, L"File") };
-    auto newMenu{ std::make_unique<Core::Menu>(
-        MF_STRING, Core::Command::nothing, L"New") };
+    // auto fileMenu{ std::make_unique<Core::Menu>(
+    //     MF_POPUP, Core::Command::nothing, L"File") };
+    // auto newMenu{ std::make_unique<Core::Menu>(
+    //     MF_STRING, Core::Command::nothing, L"New") };
 
-    auto openSubMenu{ std::make_unique<Core::Menu>(
-        MF_POPUP, Core::Command::nothing, L"Open SubMenu") };
-    auto changeTitleSubMenu{ std::make_unique<Core::Menu>(
-        MF_STRING, Core::Command::nothing, L"Change Title") };
+    // auto openSubMenu{ std::make_unique<Core::Menu>(
+    //     MF_POPUP, Core::Command::nothing, L"Open SubMenu") };
+    // auto changeTitleSubMenu{ std::make_unique<Core::Menu>(
+    //     MF_STRING, Core::Command::nothing, L"Change Title") };
 
-    openSubMenu->appendMenu(std::move(changeTitleSubMenu));
+    // openSubMenu->appendMenu(std::move(changeTitleSubMenu));
 
-    // auto seperator{ std::make_unique<Core::Menu>(MF_SEPARATOR) };
-    auto exitMenu{ std::make_unique<Core::Menu>(
-        MF_STRING, Core::Command::nothing, L"Exit") };
+    //// auto seperator{ std::make_unique<Core::Menu>(MF_SEPARATOR) };
+    // auto exitMenu{ std::make_unique<Core::Menu>(
+    //     MF_STRING, Core::Command::nothing, L"Exit") };
 
-    fileMenu->appendMenu(std::move(newMenu));
-    fileMenu->appendMenu(std::move(openSubMenu));
-    // fileMenu->appendMenu(seperator);
-    fileMenu->appendMenu(std::move(exitMenu));
+    // fileMenu->appendMenu(std::move(newMenu));
+    // fileMenu->appendMenu(std::move(openSubMenu));
+    //// fileMenu->appendMenu(seperator);
+    // fileMenu->appendMenu(std::move(exitMenu));
 
-    auto menu{ std::make_unique<Core::Menu>(mainWindowHwnd,
-                                            Core::Command::nothing) };
-    menu->appendMenu(std::move(fileMenu));
+    auto mainMenu{ std::make_unique<Core::Menu>(mainWindowHwnd) };
 
     auto helpMenu{ std::make_unique<Core::Menu>(
         MF_STRING, Core::Command::help, L"Help") };
-    helpMenu->setCommand(Core::Command::help);
+
     helpMenu->addHandler([]()
                          { MessageBox(nullptr, L"HELLO", L"My title", MB_OK); });
 
-    menu->appendMenu(std::move(helpMenu));
+    mainMenu->appendMenu(std::move(helpMenu));
+    /*helpMenu->appendSelf();
 
-    menu->setMenu();
+    mainMenu->appendMenu(std::move(helpMenu));
+    */
+    mainMenu->setMenu();
 
-    mainWindow.addControl(openFileButon);
-    mainWindow.addControl(saveFileButon);
-    mainWindow.addControl(editField);
-    mainWindow.addMenu(std::move(menu));
+    /*  mainWindow.addControl(openFileButon);
+      mainWindow.addControl(saveFileButon);
+      mainWindow.addControl(editField);*/
+    mainWindow.addMenu(std::move(mainMenu));
 
     return Core::WinApp::run();
 }

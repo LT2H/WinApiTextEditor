@@ -24,7 +24,7 @@ class Window
 
     void addControl(const Control& control);
 
-    void addMenu(std::unique_ptr<Menu> menu);
+    void addMenu(std::unique_ptr<Menu> mainMenu);
 
   private:
     WNDCLASS m_wc{};
