@@ -61,6 +61,27 @@ void Window::registerFunc(Command command, std::function<void()> func)
     m_registered_funcs[command] = func;
 }
 
+int Window::registerHotkeys()
+{
+    for (const auto& [command, hotkey] : Core::shortcutKeys)
+    {
+        int vkScanResult = VkKeyScan(hotkey[0]); // Returns int
+        if (vkScanResult == -1)
+        {
+            std::cerr << "Invalid key: " << hotkey << '\n';
+            continue;                                         // Skip invalid hotkeys
+        }
+
+        UINT vkCode = static_cast<UINT>(vkScanResult & 0xFF); // Extract key code
+        if (!RegisterHotKey(
+                m_hwnd, static_cast<int>(command), MOD_CONTROL, vkCode))
+        {
+            std::cerr << "Failed to register hotkey\n";
+            return 1;
+        }
+    }
+}
+
 LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 {
     {
@@ -101,6 +122,18 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             // default:
             //     break;
             // }
+
+            break;
+        }
+
+        case WM_HOTKEY:
+        {
+            Command hotkey{ LOWORD(wp) };
+            auto it{ m_registered_funcs.find(hotkey) };
+            if (it != m_registered_funcs.end())
+            {
+                it->second();
+            }
 
             break;
         }

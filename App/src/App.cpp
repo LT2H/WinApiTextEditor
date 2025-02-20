@@ -19,6 +19,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     Core::Window mainWindow{ hInst,       IDC_ARROW, COLOR_WINDOW, L"myWindowClass",
                              L"My Title", 100,       100,          800,
                              900,         nullptr };
+    mainWindow.registerHotkeys();
     auto mainWindowHwnd{ mainWindow.getHandle() };
 
     /* Core::Control openFileButon{
@@ -88,7 +89,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
     auto helpMenu{ std::make_unique<Core::Menu>() };
 
-    fileMenu->appendMenu(MF_STRING, Core::Command::openFile, L"New");
+    fileMenu->appendMenu(MF_STRING, Core::Command::openFile, L"Open");
     mainWindow.registerFunc(Core::Command::openFile,
                             [mainWindowHwnd, editField]()
                             { openFile(mainWindowHwnd, editField); });

@@ -28,6 +28,8 @@ class Window
 
     void registerFunc(Command command, std::function<void()> func);
 
+    int registerHotkeys();
+
   private:
     WNDCLASS m_wc{};
     HWND m_hwnd{};
