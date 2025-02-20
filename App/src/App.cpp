@@ -100,6 +100,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                             [mainWindowHwnd, editField]()
                             { saveFile(mainWindowHwnd, editField); });
 
+    fileMenu->appendMenu(MF_SEPARATOR);
+
     fileMenu->appendMenu(MF_STRING, Core::Command::exit, L"Exit");
 
     mainMenu->appendMenu(MF_POPUP, fileMenu->getHwndMenu(), L"File");

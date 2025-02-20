@@ -31,6 +31,7 @@ class Menu
 
     void appendMenu(std::unique_ptr<Menu> menu);
     void appendMenu(UINT flags, Command command, std::wstring_view windowName);
+    void appendMenu(UINT flags);
     void appendMenu(UINT flags, HMENU hMenu, std::wstring_view windowName);
     void appendSelf();
     void addChild(std::unique_ptr<Menu> menu);

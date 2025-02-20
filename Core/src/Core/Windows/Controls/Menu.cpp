@@ -101,6 +101,9 @@ void Menu::appendMenu(UINT flags, Command command, std::wstring_view windowName)
                m_windowName.data());
 }
 
+void Menu::appendMenu(UINT flags) { AppendMenu(m_hwndMenu, flags, 0, nullptr); }
+
+
 void Menu::appendMenu(UINT flags, HMENU hMenu, std::wstring_view windowName)
 {
     AppendMenu(m_hwndMenu,
