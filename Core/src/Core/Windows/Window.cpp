@@ -69,12 +69,11 @@ int Window::registerHotkeys()
         if (vkScanResult == -1)
         {
             std::cerr << "Invalid key: " << hotkey << '\n';
-            continue;                                         // Skip invalid hotkeys
+            continue; // Skip invalid hotkeys
         }
 
         UINT vkCode{ static_cast<UINT>(vkScanResult & 0xFF) }; // Extract key code
-        if (!RegisterHotKey(
-                m_hwnd, static_cast<int>(command), MOD_CONTROL, vkCode))
+        if (!RegisterHotKey(m_hwnd, static_cast<int>(command), MOD_CONTROL, vkCode))
         {
             std::cerr << "Failed to register hotkey\n";
             return 1;
@@ -104,6 +103,11 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             if (it != m_registered_funcs.end())
             {
                 it->second();
+            }
+
+            if (command == Command::exit)
+            {
+                PostQuitMessage(0);
             }
 
             // switch (command)

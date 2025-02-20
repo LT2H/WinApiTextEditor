@@ -89,16 +89,21 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
     auto helpMenu{ std::make_unique<Core::Menu>() };
 
-    fileMenu->appendMenu(MF_STRING, Core::Command::openFile, L"Open\tCtrl+O");
+    fileMenu->appendMenu(MF_STRING, Core::Command::openFile, L"Open...\tCtrl+O");
     mainWindow.registerFunc(Core::Command::openFile,
                             [mainWindowHwnd, editField]()
                             { openFile(mainWindowHwnd, editField); });
 
-    mainMenu->appendMenu(MF_POPUP, fileMenu->getHwndMenu(), L"File");
-    /*helpMenu->appendSelf();
+    fileMenu->appendMenu(
+        MF_STRING, Core::Command::saveFileAs, L"Save As...\tCtrl+S");
+    mainWindow.registerFunc(Core::Command::saveFileAs,
+                            [mainWindowHwnd, editField]()
+                            { saveFile(mainWindowHwnd, editField); });
 
-    mainMenu->appendMenu(std::move(helpMenu));
-    */
+    fileMenu->appendMenu(MF_STRING, Core::Command::exit, L"Exit");
+
+    mainMenu->appendMenu(MF_POPUP, fileMenu->getHwndMenu(), L"File");
+
     mainMenu->setMenu();
 
     /*  mainWindow.addControl(openFileButon);
