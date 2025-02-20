@@ -15,7 +15,7 @@ enum class Command
 };
 
 inline std::unordered_map<Command, std::string> shortcutKeys{
-    { Command::nothing, "A" }, { Command::openFile, "N" }, { Command::saveFile, "C" }
+    { Command::nothing, "A" }, { Command::openFile, "O" }, { Command::saveFile, "C" }
 };
 
 void enableDebugConsole();

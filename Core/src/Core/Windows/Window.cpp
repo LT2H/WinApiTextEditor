@@ -65,14 +65,14 @@ int Window::registerHotkeys()
 {
     for (const auto& [command, hotkey] : Core::shortcutKeys)
     {
-        int vkScanResult = VkKeyScan(hotkey[0]); // Returns int
+        int vkScanResult{ VkKeyScan(hotkey[0]) };
         if (vkScanResult == -1)
         {
             std::cerr << "Invalid key: " << hotkey << '\n';
             continue;                                         // Skip invalid hotkeys
         }
 
-        UINT vkCode = static_cast<UINT>(vkScanResult & 0xFF); // Extract key code
+        UINT vkCode{ static_cast<UINT>(vkScanResult & 0xFF) }; // Extract key code
         if (!RegisterHotKey(
                 m_hwnd, static_cast<int>(command), MOD_CONTROL, vkCode))
         {

@@ -89,7 +89,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
     auto helpMenu{ std::make_unique<Core::Menu>() };
 
-    fileMenu->appendMenu(MF_STRING, Core::Command::openFile, L"Open");
+    fileMenu->appendMenu(MF_STRING, Core::Command::openFile, L"Open\tCtrl+O");
     mainWindow.registerFunc(Core::Command::openFile,
                             [mainWindowHwnd, editField]()
                             { openFile(mainWindowHwnd, editField); });
