@@ -13,28 +13,8 @@
 #include <vector>
 #include <array>
 
-void launchNewWindow()
-{
-    std::array<wchar_t, MAX_PATH> exePath{};
-    GetModuleFileNameW(nullptr, exePath.data(), MAX_PATH);
-
-    // Remove the executable name, keep only the directory
-    wchar_t* lastSlash{ wcsrchr(exePath.data(), L'\\') };
-    if (lastSlash)
-    {
-        *lastSlash = L'\0'; // Terminate at the last backslash
-    }
-
-    // Construct the new path to App.exe
-    std::wstring newWindowPath{ std::wstring(exePath.data()) + L"\\App.exe" };
-
-    ShellExecuteW(
-        nullptr, L"open", newWindowPath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
-}
-
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow)
 {
-
 #ifdef DEBUG
     Core::enableDebugConsole();
 #endif // DEBUG
@@ -66,13 +46,13 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
     fileMenu->appendMenu(MF_STRING, Core::Command::openFile, L"Open...\tCtrl+O");
     mainWindow.registerFunc(Core::Command::openFile,
-                            [mainWindowHwnd, editField]()
+                            [mainWindowHwnd, &editField]()
                             { openFile(mainWindowHwnd, editField); });
 
     fileMenu->appendMenu(
         MF_STRING, Core::Command::saveFileAs, L"Save As...\tCtrl+Shift+S");
     mainWindow.registerFunc(Core::Command::saveFileAs,
-                            [mainWindowHwnd, editField]()
+                            [mainWindowHwnd, &editField]()
                             { saveFile(mainWindowHwnd, editField); });
 
     fileMenu->appendMenu(

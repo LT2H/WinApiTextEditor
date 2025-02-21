@@ -1,5 +1,7 @@
 #include "TextEditor.h"
+#include <windows.h>
 #include <iostream>
+#include <array>
 
 int displayFile(const std::wstring& path, const Core::Control& editField)
 {
@@ -77,4 +79,22 @@ int writeFile(const std::wstring& path, const Core::Control& editField)
     buffer << data.data();
 
     outfile << buffer.str();
+}
+void launchNewWindow()
+{
+    std::array<wchar_t, MAX_PATH> exePath{};
+    GetModuleFileNameW(nullptr, exePath.data(), MAX_PATH);
+
+    // Remove the executable name, keep only the directory
+    wchar_t* lastSlash{ wcsrchr(exePath.data(), L'\\') };
+    if (lastSlash)
+    {
+        *lastSlash = L'\0'; // Terminate at the last backslash
+    }
+
+    // Construct the new path to App.exe
+    std::wstring newWindowPath{ std::wstring(exePath.data()) + L"\\App.exe" };
+
+    ShellExecuteW(
+        nullptr, L"open", newWindowPath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 }
