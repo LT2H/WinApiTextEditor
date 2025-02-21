@@ -62,18 +62,28 @@ void Window::registerFunc(Command command, std::function<void()> func)
 }
 
 int Window::registerHotkeys()
-{
-    for (const auto& [command, hotkey] : Core::shortcutKeys)
+{ // inline std::unordered_map<Command, std::string> shortcutKeys{
+    //     { Command::nothing, "A" },
+    //     { Command::openFile, "O" },
+    //     { Command::saveFileAs, "S" }
+    // };
+
+    m_hotkeys = { { MOD_CONTROL, Command::openFile, 'O' },
+                  { MOD_CONTROL | MOD_SHIFT, Command::saveFileAs, 'S' },
+                  { MOD_CONTROL, Command::help, 'H' } };
+
+    for (auto& hotkey : m_hotkeys)
     {
-        int vkScanResult{ VkKeyScan(hotkey[0]) };
+        int vkScanResult{ VkKeyScan(hotkey.key) };
         if (vkScanResult == -1)
         {
-            std::cerr << "Invalid key: " << hotkey << '\n';
+            std::cerr << "Invalid key: " << hotkey.key << '\n';
             continue; // Skip invalid hotkeys
         }
 
         UINT vkCode{ static_cast<UINT>(vkScanResult & 0xFF) }; // Extract key code
-        if (!RegisterHotKey(m_hwnd, static_cast<int>(command), MOD_CONTROL, vkCode))
+        if (!RegisterHotKey(
+                m_hwnd, static_cast<int>(hotkey.command), hotkey.modifiers, vkCode))
         {
             std::cerr << "Failed to register hotkey\n";
             return 1;

@@ -95,7 +95,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                             { openFile(mainWindowHwnd, editField); });
 
     fileMenu->appendMenu(
-        MF_STRING, Core::Command::saveFileAs, L"Save As...\tCtrl+S");
+        MF_STRING, Core::Command::saveFileAs, L"Save As...\tCtrl+Shift+S");
     mainWindow.registerFunc(Core::Command::saveFileAs,
                             [mainWindowHwnd, editField]()
                             { saveFile(mainWindowHwnd, editField); });
@@ -107,10 +107,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     mainMenu->appendMenu(MF_POPUP, fileMenu->getHwndMenu(), L"File");
 
     mainMenu->setMenu();
-
-    /*  mainWindow.addControl(openFileButon);
-      mainWindow.addControl(saveFileButon);
-      mainWindow.addControl(editField);*/
 
     return Core::WinApp::run();
 }

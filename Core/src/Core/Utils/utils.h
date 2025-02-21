@@ -15,11 +15,11 @@ enum class Command
     exit       = 5,
 };
 
-inline std::unordered_map<Command, std::string> shortcutKeys{
-    { Command::nothing, "A" },
-    { Command::openFile, "O" },
-    { Command::saveFileAs, "S" }
-};
+// inline std::unordered_map<Command, std::string> shortcutKeys{
+//     { Command::nothing, "A" },
+//     { Command::openFile, "O" },
+//     { Command::saveFileAs, "S" }
+// };
 
 void enableDebugConsole();
 
