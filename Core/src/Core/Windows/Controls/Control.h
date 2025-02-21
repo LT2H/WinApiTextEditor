@@ -34,16 +34,16 @@ class Control
 
     // void create();
 
-    std::wstring getClassName() const { return m_className; }
-    std::wstring getWindowName() const { return m_windowName; }
-    DWORD getStyle() const { return m_style; }
-    int getX() const { return m_x; }
-    int getY() const { return m_y; }
-    int getWidth() const { return m_width; }
-    int getHeight() const { return m_height; }
-    HWND getHwndParent() const { return m_hwndParent; }
-    Command getCommand() const { return m_command; }
-    HWND getHwnd() const { return m_hwnd; }
+    constexpr std::wstring getClassName() const { return m_className; }
+    constexpr std::wstring getWindowName() const { return m_windowName; }
+    constexpr DWORD getStyle() const { return m_style; }
+    constexpr int getX() const { return m_x; }
+    constexpr int getY() const { return m_y; }
+    constexpr int getWidth() const { return m_width; }
+    constexpr int getHeight() const { return m_height; }
+    constexpr HWND getHwndParent() const { return m_hwndParent; }
+    constexpr Command getCommand() const { return m_command; }
+    constexpr HWND getHwnd() const { return m_hwnd; }
 
     void addHandler(std::function<void()> handler)
     {

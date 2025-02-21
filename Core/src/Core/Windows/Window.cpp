@@ -62,12 +62,7 @@ void Window::registerFunc(Command command, std::function<void()> func)
 }
 
 int Window::registerHotkeys()
-{ // inline std::unordered_map<Command, std::string> shortcutKeys{
-    //     { Command::nothing, "A" },
-    //     { Command::openFile, "O" },
-    //     { Command::saveFileAs, "S" }
-    // };
-
+{
     m_hotkeys = { { MOD_CONTROL, Command::openFile, 'O' },
                   { MOD_CONTROL | MOD_SHIFT, Command::saveFileAs, 'S' },
                   { MOD_CONTROL, Command::help, 'H' } };
@@ -82,6 +77,7 @@ int Window::registerHotkeys()
         }
 
         UINT vkCode{ static_cast<UINT>(vkScanResult & 0xFF) }; // Extract key code
+
         if (!RegisterHotKey(
                 m_hwnd, static_cast<int>(hotkey.command), hotkey.modifiers, vkCode))
         {

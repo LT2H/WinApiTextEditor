@@ -6,7 +6,7 @@ namespace Core
 {
 constexpr UINT WM_CREATE_CONTROLS = WM_APP + 1;
 
-enum class Command
+enum class Command : int
 {
     nothing = 1,
     openFile,
