@@ -1,12 +1,64 @@
 #include "TextEditor.h"
+#include "Core/Windows/Window.h"
+
 #include <windows.h>
+
 #include <iostream>
 #include <array>
 #include <filesystem>
 
-std::wstring currentFilePath{};
+TextEditor::TextEditor() {
+    auto& mainWindow{ Core::Window::getInstance() };
+    mainWindow.registerHotkeys();
+    auto mainWindowHwnd{ mainWindow.getHandle() };
 
-int displayFile(const std::wstring& path, const Core::Control& editField)
+    Core::Control editField{ L"Edit",
+                             L"",
+                             WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
+                                 ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL |
+                                 WS_HSCROLL,
+                             10,
+                             50,
+                             400,
+                             300,
+                             mainWindowHwnd };
+
+    Core::Menu mainMenu{ mainWindowHwnd };
+    Core::Menu fileMenu;
+    Core::Menu subMenu;
+    Core::Menu helpMenu;
+
+    
+    fileMenu.appendMenu(
+        MF_STRING, Core::Command::newWindow, L"New Window\tCtrl+Shift+N");
+    mainWindow.registerFunc(Core::Command::newWindow, [this] { launchNewWindow(); });
+
+    fileMenu.appendMenu(MF_STRING, Core::Command::openFile, L"Open...\tCtrl+O");
+    mainWindow.registerFunc(Core::Command::openFile,
+                            [this, mainWindowHwnd, &editField]()
+                            { openFile(mainWindowHwnd, editField); });
+
+    fileMenu.appendMenu(MF_STRING, Core::Command::saveFile, L"Save\tCtrl+S");
+    mainWindow.registerFunc(Core::Command::saveFile,
+                            [this, mainWindowHwnd, &editField]()
+                            { saveFile(mainWindowHwnd, editField); });
+
+    fileMenu.appendMenu(
+        MF_STRING, Core::Command::saveFileAs, L"Save As...\tCtrl+Shift+S");
+    mainWindow.registerFunc(Core::Command::saveFileAs,
+                            [this, mainWindowHwnd, &editField]()
+                            { saveFileAs(mainWindowHwnd, editField); });
+
+    fileMenu.appendMenu(MF_SEPARATOR);
+
+    fileMenu.appendMenu(MF_STRING, Core::Command::exit, L"Exit");
+
+    mainMenu.appendMenu(MF_POPUP, fileMenu.getHwndMenu(), L"File");
+
+    mainMenu.setMenu();
+}
+
+int TextEditor::displayFile(const std::wstring& path, const Core::Control& editField)
 {
     std::wifstream file(path, std::ios::binary);
     if (!file)
@@ -24,7 +76,7 @@ int displayFile(const std::wstring& path, const Core::Control& editField)
     SetWindowText(editField.getHwnd(), content.data());
 }
 
-void openFile(HWND hwnd, const Core::Control& editField)
+void TextEditor::openFile(HWND hwnd, const Core::Control& editField)
 {
     OPENFILENAME ofn{};
     std::vector<wchar_t> fileName(100);
@@ -38,14 +90,14 @@ void openFile(HWND hwnd, const Core::Control& editField)
 
     if (GetOpenFileName(&ofn))
     {
-        currentFilePath = fileName.data();  // Store the selected file path
+        currentFilePath = fileName.data(); // Store the selected file path
 
         MessageBox(nullptr, fileName.data(), L"Selected File", MB_OK);
         displayFile(ofn.lpstrFile, editField);
     }
 }
 
-void saveFile(HWND hwnd, const Core::Control& editField)
+void TextEditor::saveFile(HWND hwnd, const Core::Control& editField)
 {
     if (currentFilePath.empty())
     {
@@ -57,7 +109,7 @@ void saveFile(HWND hwnd, const Core::Control& editField)
     }
 }
 
-void saveFileAs(HWND hwnd, const Core::Control& editField)
+void TextEditor::saveFileAs(HWND hwnd, const Core::Control& editField)
 {
     OPENFILENAME ofn{};
     std::vector<wchar_t> fileName(100);
@@ -81,7 +133,7 @@ void saveFileAs(HWND hwnd, const Core::Control& editField)
     }
 }
 
-int writeFile(std::wstring_view path, const Core::Control& editField)
+int TextEditor::writeFile(std::wstring_view path, const Core::Control& editField)
 {
     std::wofstream outfile(path.data(), std::ios::binary);
     if (!outfile)
@@ -103,7 +155,7 @@ int writeFile(std::wstring_view path, const Core::Control& editField)
     outfile << buffer.str();
 }
 
-void launchNewWindow()
+void TextEditor::launchNewWindow()
 {
     std::array<wchar_t, MAX_PATH> exePath{};
     GetModuleFileNameW(nullptr, exePath.data(), MAX_PATH);

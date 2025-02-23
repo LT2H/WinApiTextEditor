@@ -31,7 +31,7 @@ class Window
                        std::wstring className, std::wstring windowName, int x, int y,
                        int width, int height, HWND hwndParent);
 
-    Window& getInstance();
+    static Window& getInstance();
 
   private:
     Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring className,

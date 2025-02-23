@@ -5,14 +5,24 @@
 #include <vector>
 #include "Core/Windows/Controls/Control.h"
 
-int displayFile(const std::wstring& path, const Core::Control& editField);
+class TextEditor
+{
+  public:
+    TextEditor();
 
-void openFile(HWND hwnd, const Core::Control& editField);
+    int displayFile(const std::wstring& path, const Core::Control& editField);
 
-void saveFile(HWND hwnd, const Core::Control& editField);
+    void openFile(HWND hwnd, const Core::Control& editField);
 
-void saveFileAs(HWND hwnd, const Core::Control& editField);
+    void saveFile(HWND hwnd, const Core::Control& editField);
 
-int writeFile(std::wstring_view path, const Core::Control& editField);
+    void saveFileAs(HWND hwnd, const Core::Control& editField);
 
-void launchNewWindow();
+    int writeFile(std::wstring_view path, const Core::Control& editField);
+
+    void launchNewWindow();
+
+private:
+    std::wstring currentFilePath{};
+};
+
