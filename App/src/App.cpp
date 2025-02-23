@@ -18,6 +18,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 #ifdef DEBUG
     Core::enableDebugConsole();
 #endif // DEBUG
+
     Core::Window& mainWindow{ Core::Window::initialize(hInst,
                                                        IDC_ARROW,
                                                        COLOR_WINDOW,

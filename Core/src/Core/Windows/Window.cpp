@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 #include <unordered_map>
+#include <span>
+
 namespace Core
 {
 Window* Window::m_instance{ nullptr };
@@ -98,15 +100,9 @@ void Window::registerFunc(Command command, std::function<void()> func)
     m_registered_funcs[command] = func;
 }
 
-int Window::registerHotkeys()
+int Window::registerHotkeys(std::span<Hotkey> hotkeys) const
 {
-    m_hotkeys = { { MOD_CONTROL, Command::openFile, 'O' },
-                  { MOD_CONTROL, Command::saveFile, 'S' },
-                  { MOD_CONTROL | MOD_SHIFT, Command::saveFileAs, 'S' },
-                  { MOD_CONTROL, Command::undo, 'Z' },
-                  { MOD_CONTROL, Command::help, 'H' } };
-
-    for (auto& hotkey : m_hotkeys)
+    for (auto& hotkey : hotkeys)
     {
         int vkScanResult{ VkKeyScan(hotkey.key) };
         if (vkScanResult == -1)

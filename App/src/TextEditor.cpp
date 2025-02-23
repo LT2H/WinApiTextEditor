@@ -19,7 +19,7 @@ TextEditor::TextEditor()
                    Core::Window::getInstance().getHandle() }
 {
     auto& mainWindow{ Core::Window::getInstance() };
-    mainWindow.registerHotkeys();
+    mainWindow.registerHotkeys(m_hotkeys);
     auto mainWindowHwnd{ mainWindow.getHandle() };
 
     Core::Menu mainMenu{ mainWindowHwnd };

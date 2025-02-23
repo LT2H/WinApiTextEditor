@@ -1,9 +1,14 @@
+#include <Core/Windows/Controls/Control.h>
+#include <Core/utils/utils.h>
+#include <Core/Utils/Hotkey.h>
+
 #include <windows.h>
+
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include "Core/Windows/Controls/Control.h"
+#include <array>
 
 class TextEditor
 {
@@ -27,4 +32,11 @@ class TextEditor
   private:
     std::wstring m_currentFilePath{};
     Core::Control m_editField;
+    std::array<Core::Hotkey, 5> m_hotkeys{
+        { { MOD_CONTROL, Core::Command::openFile, 'O' },
+          { MOD_CONTROL, Core::Command::saveFile, 'S' },
+          { MOD_CONTROL | MOD_SHIFT, Core::Command::saveFileAs, 'S' },
+          { MOD_CONTROL, Core::Command::undo, 'Z' },
+          { MOD_CONTROL, Core::Command::help, 'H' } }
+    };
 };

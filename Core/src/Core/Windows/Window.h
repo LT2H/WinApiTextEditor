@@ -5,7 +5,7 @@
 #include <Core/utils/Hotkey.h>
 #include <windows.h>
 #include <string>
-#include <vector>
+#include <span>
 #include <unordered_map>
 
 namespace Core
@@ -25,7 +25,7 @@ class Window
 
     void registerFunc(Command command, std::function<void()> func);
 
-    int registerHotkeys();
+    int registerHotkeys(std::span<Hotkey> m_hotkeys) const;
 
     static Window& initialize(HINSTANCE hInst, LPCWSTR cursorId, int color,
                        std::wstring className, std::wstring windowName, int x, int y,
@@ -40,7 +40,6 @@ class Window
 
     WNDCLASS m_wc{};
     HWND m_hwnd{};
-    std::vector<Hotkey> m_hotkeys{};
     static std::unordered_map<Command, Control> m_controls;
     static std::unordered_map<int, HWND> m_control_handles;
 
