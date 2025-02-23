@@ -44,41 +44,38 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                              300,
                              mainWindowHwnd };
 
-    auto mainMenu{ std::make_unique<Core::Menu>(mainWindowHwnd) };
+    Core::Menu mainMenu{ mainWindowHwnd };
+    Core::Menu fileMenu;
+    Core::Menu subMenu;
+    Core::Menu helpMenu;
 
-    auto fileMenu{ std::make_unique<Core::Menu>() };
-
-    auto subMenu{ std::make_unique<Core::Menu>() };
-
-    auto helpMenu{ std::make_unique<Core::Menu>() };
-
-    fileMenu->appendMenu(MF_STRING, Core::Command::openFile, L"Open...\tCtrl+O");
+    fileMenu.appendMenu(MF_STRING, Core::Command::openFile, L"Open...\tCtrl+O");
     mainWindow.registerFunc(Core::Command::openFile,
                             [mainWindowHwnd, &editField]()
                             { openFile(mainWindowHwnd, editField); });
 
-    fileMenu->appendMenu(MF_STRING, Core::Command::saveFile, L"Save\tCtrl+S");
+    fileMenu.appendMenu(MF_STRING, Core::Command::saveFile, L"Save\tCtrl+S");
     mainWindow.registerFunc(Core::Command::saveFile,
                             [mainWindowHwnd, &editField]()
                             { saveFile(mainWindowHwnd, editField); });
 
-    fileMenu->appendMenu(
+    fileMenu.appendMenu(
         MF_STRING, Core::Command::saveFileAs, L"Save As...\tCtrl+Shift+S");
     mainWindow.registerFunc(Core::Command::saveFileAs,
                             [mainWindowHwnd, &editField]()
                             { saveFileAs(mainWindowHwnd, editField); });
 
-    fileMenu->appendMenu(
+    fileMenu.appendMenu(
         MF_STRING, Core::Command::newWindow, L"New Window\tCtrl+Shift+N");
     mainWindow.registerFunc(Core::Command::newWindow, [] { launchNewWindow(); });
 
-    fileMenu->appendMenu(MF_SEPARATOR);
+    fileMenu.appendMenu(MF_SEPARATOR);
 
-    fileMenu->appendMenu(MF_STRING, Core::Command::exit, L"Exit");
+    fileMenu.appendMenu(MF_STRING, Core::Command::exit, L"Exit");
 
-    mainMenu->appendMenu(MF_POPUP, fileMenu->getHwndMenu(), L"File");
+    mainMenu.appendMenu(MF_POPUP, fileMenu.getHwndMenu(), L"File");
 
-    mainMenu->setMenu();
+    mainMenu.setMenu();
 
     return Core::WinApp::run();
 }
