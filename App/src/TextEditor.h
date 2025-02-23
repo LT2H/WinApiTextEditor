@@ -31,6 +31,8 @@ class TextEditor
 
     void redo();
 
+    void selectAll();
+
   private:
     std::wstring m_currentFilePath{};
     Core::Control m_editField;
@@ -40,6 +42,6 @@ class TextEditor
           { MOD_CONTROL | MOD_SHIFT, Core::Command::saveFileAs, 'S' },
           { MOD_CONTROL, Core::Command::undo, 'Z' },
           { MOD_CONTROL, Core::Command::redo, 'Y' },
-          { MOD_CONTROL, Core::Command::help, 'H' } }
+          { MOD_CONTROL, Core::Command::selectAll, 'A' } }
     };
 };

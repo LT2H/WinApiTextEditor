@@ -59,6 +59,11 @@ TextEditor::TextEditor()
 
     fileMenu.appendMenu(MF_STRING, Core::Command::exit, L"Exit");
 
+    editMenu.appendMenu(MF_STRING,
+                        Core::Command::selectAll,
+                        L"Select All\tCtrl+A",
+                        [this] { selectAll(); });
+
     editMenu.appendMenu(
         MF_STRING, Core::Command::undo, L"Undo\tCtrl+Z", [this] { undo(); });
 
@@ -190,3 +195,8 @@ void TextEditor::launchNewWindow()
 void TextEditor::undo() { SendMessage(m_editField.getHwnd(), EM_UNDO, 0, 0); }
 
 void TextEditor::redo() { SendMessage(m_editField.getHwnd(), EM_REDO, 0, 0); }
+
+void TextEditor::selectAll()
+{
+    SendMessage(m_editField.getHwnd(), EM_SETSEL, 0, -1);
+}
