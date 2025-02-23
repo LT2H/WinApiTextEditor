@@ -17,10 +17,6 @@ constexpr int SAVE_FILE_BUTTON{ 2 };
 class Window
 {
   public:
-    explicit Window(HINSTANCE hInst, LPCWSTR cursorId, int color,
-                    std::wstring className, std::wstring windowName, int x, int y,
-                    int width, int height, HWND hwndParent);
-
     HWND getHandle() { return m_hwnd; }
 
     void addControl(const Control& control);
@@ -31,7 +27,17 @@ class Window
 
     int registerHotkeys();
 
+    static Window& initialize(HINSTANCE hInst, LPCWSTR cursorId, int color,
+                       std::wstring className, std::wstring windowName, int x, int y,
+                       int width, int height, HWND hwndParent);
+
+    Window& getInstance();
+
   private:
+    Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring className,
+           std::wstring windowName, int x, int y, int width, int height,
+           HWND hwndParent);
+
     WNDCLASS m_wc{};
     HWND m_hwnd{};
     std::vector<Hotkey> m_hotkeys{};
@@ -45,5 +51,7 @@ class Window
     static void createControls();
 
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
+
+    static Window* m_instance;
 };
 } // namespace Core

@@ -6,6 +6,8 @@
 #include <unordered_map>
 namespace Core
 {
+Window* Window::m_instance{ nullptr };
+
 std::unordered_map<Command, Control> Window::m_controls{};
 std::vector<std::unique_ptr<Menu>> Window::m_menus{};
 std::unordered_map<Command, std::function<void()>> Window::m_registered_funcs{};
@@ -36,6 +38,41 @@ Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring classN
                           nullptr,
                           nullptr,
                           nullptr);
+}
+
+Window& Window::initialize(HINSTANCE hInst, LPCWSTR cursorId, int color,
+                           std::wstring className, std::wstring windowName, int x,
+                           int y, int width, int height, HWND hwndParent)
+{
+    if (!m_instance)
+    {
+        m_instance = new Window(hInst,
+                                cursorId,
+                                color,
+                                className,
+                                windowName,
+                                x,
+                                y,
+                                width,
+                                height,
+                                hwndParent);
+    }
+    else
+    {
+        throw std::runtime_error(
+            "Window already created. Call getInstance() instead.");
+    }
+
+     return *m_instance;
+}
+
+Window& Window::getInstance()
+{
+    if (!m_instance)
+    {
+        throw std::runtime_error("WinApp not created yet. Call create() first.");
+    }
+    return *m_instance;
 }
 
 void Window::addControl(const Control& control)

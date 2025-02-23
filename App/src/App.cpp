@@ -19,9 +19,17 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
     Core::enableDebugConsole();
 #endif // DEBUG
 
-    Core::Window mainWindow{ hInst,       IDC_ARROW, COLOR_WINDOW, L"myWindowClass",
-                             L"My Title", 100,       100,          800,
-                             900,         nullptr };
+    Core::Window& mainWindow{ Core::Window::initialize(hInst,
+                                                      IDC_ARROW,
+                                                      COLOR_WINDOW,
+                                                      L"myWindowClass",
+                                                      L"My Title",
+                                                      100,
+                                                      100,
+                                                      800,
+                                                      900,
+                                                      nullptr) };
+
     mainWindow.registerHotkeys();
     auto mainWindowHwnd{ mainWindow.getHandle() };
 
