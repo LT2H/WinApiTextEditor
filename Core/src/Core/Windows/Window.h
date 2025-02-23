@@ -39,15 +39,13 @@ class Window
            HWND hwndParent);
 
     WNDCLASS m_wc{};
-    HWND m_hwnd{};
-    static std::unordered_map<Command, Control> m_controls;
+    static HWND m_hwnd;
+    static std::vector<Control> m_controls;
     static std::unordered_map<int, HWND> m_control_handles;
 
     static std::vector<std::unique_ptr<Menu>> m_menus;
 
     static std::unordered_map<Command, std::function<void()>> m_registered_funcs;
-
-    static void createControls();
 
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
 

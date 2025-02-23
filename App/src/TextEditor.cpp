@@ -13,15 +13,17 @@ TextEditor::TextEditor()
                    L"",
                    WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
                        ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL | WS_HSCROLL,
-                   10,
-                   50,
-                   400,
-                   300,
+                   0,
+                   0,
+                   0,
+                   0,
                    Core::Window::getInstance().getHandle() }
 {
     auto& mainWindow{ Core::Window::getInstance() };
     mainWindow.registerHotkeys(m_hotkeys);
     auto mainWindowHwnd{ mainWindow.getHandle() };
+
+    mainWindow.addControl(m_editField);
 
     Core::Menu mainMenu{ mainWindowHwnd };
     Core::Menu fileMenu;

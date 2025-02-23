@@ -9,8 +9,8 @@
 namespace Core
 {
 Window* Window::m_instance{ nullptr };
-
-std::unordered_map<Command, Control> Window::m_controls{};
+HWND Window::m_hwnd{};
+std::vector<Control> Window::m_controls{};
 std::vector<std::unique_ptr<Menu>> Window::m_menus{};
 std::unordered_map<Command, std::function<void()>> Window::m_registered_funcs{};
 
@@ -65,7 +65,7 @@ Window& Window::initialize(HINSTANCE hInst, LPCWSTR cursorId, int color,
             "Window already created. Call getInstance() instead.");
     }
 
-     return *m_instance;
+    return *m_instance;
 }
 
 Window& Window::getInstance()
@@ -79,20 +79,12 @@ Window& Window::getInstance()
 
 void Window::addControl(const Control& control)
 {
-    m_controls[control.getCommand()] = control;
+    m_controls.push_back(control);
 }
 
 void Window::addMenu(std::unique_ptr<Menu> mainMenu)
 {
     m_menus.push_back(std::move(mainMenu));
-}
-
-void Window::createControls()
-{
-    /*  for (auto& control : m_controls)
-      {
-          control.second.create();
-      }*/
 }
 
 void Window::registerFunc(Command command, std::function<void()> func)
@@ -182,6 +174,19 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 
             break;
         }
+
+        case WM_SIZE:
+        {
+            RECT rc{};
+            GetClientRect(m_hwnd, &rc);
+            for (const auto& control : m_controls)
+            {
+                std::cout << "1\n";
+                MoveWindow(
+                    control.getHwnd(), 0, 0, rc.right, rc.bottom, TRUE);
+            }
+        }
+        break;
 
         case WM_DESTROY:
             PostQuitMessage(0);
