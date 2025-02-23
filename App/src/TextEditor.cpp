@@ -4,6 +4,8 @@
 #include <array>
 #include <filesystem>
 
+std::wstring currentFilePath{};
+
 int displayFile(const std::wstring& path, const Core::Control& editField)
 {
     std::wifstream file(path, std::ios::binary);
@@ -25,7 +27,7 @@ int displayFile(const std::wstring& path, const Core::Control& editField)
 void openFile(HWND hwnd, const Core::Control& editField)
 {
     OPENFILENAME ofn{};
-    std::vector<wchar_t> fileName(100); // Initialize with null characters
+    std::vector<wchar_t> fileName(100);
 
     ofn.lStructSize  = sizeof(OPENFILENAME);
     ofn.hwndOwner    = hwnd;
@@ -36,6 +38,8 @@ void openFile(HWND hwnd, const Core::Control& editField)
 
     if (GetOpenFileName(&ofn))
     {
+        currentFilePath = fileName.data();  // Store the selected file path
+
         MessageBox(nullptr, fileName.data(), L"Selected File", MB_OK);
         displayFile(ofn.lpstrFile, editField);
     }
@@ -43,8 +47,20 @@ void openFile(HWND hwnd, const Core::Control& editField)
 
 void saveFile(HWND hwnd, const Core::Control& editField)
 {
+    if (currentFilePath.empty())
+    {
+        saveFileAs(hwnd, editField);
+    }
+    else
+    {
+        writeFile(currentFilePath, editField);
+    }
+}
+
+void saveFileAs(HWND hwnd, const Core::Control& editField)
+{
     OPENFILENAME ofn{};
-    std::vector<wchar_t> fileName(100, L'\0'); // Initialize with null characters
+    std::vector<wchar_t> fileName(100);
 
     ofn.lStructSize  = sizeof(OPENFILENAME);
     ofn.hwndOwner    = hwnd;
@@ -56,16 +72,18 @@ void saveFile(HWND hwnd, const Core::Control& editField)
 
     if (GetSaveFileName(&ofn))
     {
-        std::wstring filePath{ ofn.lpstrFile };
+        currentFilePath = fileName.data(); // Store the file path
 
-        writeFile(ofn.lpstrFile, editField);
+        std::wstring_view filePath{ ofn.lpstrFile };
+
+        writeFile(filePath, editField);
         MessageBox(nullptr, fileName.data(), L"Saved File To", MB_OK);
     }
 }
 
-int writeFile(const std::wstring& path, const Core::Control& editField)
+int writeFile(std::wstring_view path, const Core::Control& editField)
 {
-    std::wofstream outfile(path, std::ios::binary);
+    std::wofstream outfile(path.data(), std::ios::binary);
     if (!outfile)
     {
         MessageBox(
@@ -84,6 +102,7 @@ int writeFile(const std::wstring& path, const Core::Control& editField)
 
     outfile << buffer.str();
 }
+
 void launchNewWindow()
 {
     std::array<wchar_t, MAX_PATH> exePath{};

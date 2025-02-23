@@ -49,11 +49,16 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                             [mainWindowHwnd, &editField]()
                             { openFile(mainWindowHwnd, editField); });
 
+    fileMenu->appendMenu(MF_STRING, Core::Command::saveFile, L"Save\tCtrl+S");
+    mainWindow.registerFunc(Core::Command::saveFile,
+                            [mainWindowHwnd, &editField]()
+                            { saveFile(mainWindowHwnd, editField); });
+
     fileMenu->appendMenu(
         MF_STRING, Core::Command::saveFileAs, L"Save As...\tCtrl+Shift+S");
     mainWindow.registerFunc(Core::Command::saveFileAs,
                             [mainWindowHwnd, &editField]()
-                            { saveFile(mainWindowHwnd, editField); });
+                            { saveFileAs(mainWindowHwnd, editField); });
 
     fileMenu->appendMenu(
         MF_STRING, Core::Command::newWindow, L"New Window\tCtrl+Shift+N");

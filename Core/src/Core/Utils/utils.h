@@ -10,6 +10,7 @@ enum class Command : int
 {
     nothing = 1,
     openFile,
+    saveFile,
     saveFileAs,
     help,
     exit,

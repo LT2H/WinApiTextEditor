@@ -11,6 +11,8 @@ void openFile(HWND hwnd, const Core::Control& editField);
 
 void saveFile(HWND hwnd, const Core::Control& editField);
 
-int writeFile(const std::wstring& path, const Core::Control& editField);
+void saveFileAs(HWND hwnd, const Core::Control& editField);
+
+int writeFile(std::wstring_view path, const Core::Control& editField);
 
 void launchNewWindow();
