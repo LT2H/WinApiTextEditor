@@ -25,6 +25,8 @@ class TextEditor
 
     int writeFile(std::wstring_view path, const Core::Control& editField);
 
+    void showFindDialog(HWND hwnd);
+
     void launchNewWindow();
 
     void undo();
@@ -33,15 +35,21 @@ class TextEditor
 
     void selectAll();
 
+    HWND getHdlg() { return m_hdlg; }
+
   private:
     std::wstring m_currentFilePath{};
     Core::Control m_editField;
-    std::array<Core::Hotkey, 6> m_hotkeys{
-        { { MOD_CONTROL, Core::Command::openFile, 'O' },
-          { MOD_CONTROL, Core::Command::saveFile, 'S' },
-          { MOD_CONTROL | MOD_SHIFT, Core::Command::saveFileAs, 'S' },
-          { MOD_CONTROL, Core::Command::undo, 'Z' },
-          { MOD_CONTROL, Core::Command::redo, 'Y' },
-          { MOD_CONTROL, Core::Command::selectAll, 'A' } }
-    };
+    std::array<Core::Hotkey, 7> m_hotkeys{ {
+        { MOD_CONTROL, Core::Command::openFile, 'O' },
+        { MOD_CONTROL, Core::Command::saveFile, 'S' },
+        { MOD_CONTROL | MOD_SHIFT, Core::Command::saveFileAs, 'S' },
+        { MOD_CONTROL, Core::Command::undo, 'Z' },
+        { MOD_CONTROL, Core::Command::redo, 'Y' },
+        { MOD_CONTROL, Core::Command::selectAll, 'A' },
+        { MOD_CONTROL, Core::Command::showFindDialog, 'F' },
+    } };
+
+    FINDREPLACE m_fr{};
+    HWND m_hdlg{};
 };

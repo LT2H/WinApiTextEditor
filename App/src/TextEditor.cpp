@@ -70,6 +70,11 @@ TextEditor::TextEditor()
     editMenu.appendMenu(
         MF_STRING, Core::Command::redo, L"Redo\tCtrl+Y", [this] { redo(); });
 
+    editMenu.appendMenu(MF_STRING,
+                        Core::Command::showFindDialog,
+                        L"Find...\tCtrl+F",
+                        [this, mainWindowHwnd] { showFindDialog(mainWindowHwnd); });
+
     mainMenu.appendMenu(MF_POPUP, fileMenu.getHwndMenu(), L"File");
     mainMenu.appendMenu(MF_POPUP, editMenu.getHwndMenu(), L"Edit");
 
@@ -172,6 +177,42 @@ int TextEditor::writeFile(std::wstring_view path, const Core::Control& editField
 
     outfile << buffer.str();
 }
+
+void TextEditor::showFindDialog(HWND hwnd)
+{
+    std::vector<wchar_t> szFindWhat(80, L'\0'); // Mutable buffer using std::vector
+
+    ZeroMemory(&m_fr, sizeof(FINDREPLACE));
+
+    m_fr.lStructSize   = sizeof(m_fr);
+    m_fr.hwndOwner   = hwnd;
+    m_fr.lpstrFindWhat = szFindWhat.data();
+    m_fr.wFindWhatLen  = static_cast<int>(szFindWhat.size());
+    m_fr.Flags         = 0;
+
+    m_hdlg = FindText(&m_fr); // Show the Find Dialog
+}
+
+//void FindNextText()
+//{
+//    FINDTEXTEX ft{};
+//    ft.chrg.cpMin = 0;          // Start searching from the beginning
+//    ft.chrg.cpMax = -1;         // Search till the end
+//    ft.lpstrText  = szFindText; // Text to search
+//
+//    int foundPos = SendMessage(hEdit, EM_FINDTEXTEX, FR_DOWN, (LPARAM)&ft);
+//    if (foundPos != -1)
+//    {
+//        // Select the found text
+//        SendMessage(hEdit, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
+//        SendMessage(hEdit, EM_SCROLLCARET, 0, 0); // Scroll to selection
+//    }
+//    else
+//    {
+//        MessageBox(
+//            NULL, _T("Text not found!"), _T("Find"), MB_OK | MB_ICONINFORMATION);
+//    }
+//}
 
 void TextEditor::launchNewWindow()
 {

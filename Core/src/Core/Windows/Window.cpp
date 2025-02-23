@@ -8,6 +8,8 @@
 
 namespace Core
 {
+UINT uFindMsg{};
+
 Window* Window::m_instance{ nullptr };
 HWND Window::m_hwnd{};
 std::vector<Control> Window::m_controls{};
@@ -77,10 +79,7 @@ Window& Window::getInstance()
     return *m_instance;
 }
 
-void Window::addControl(const Control& control)
-{
-    m_controls.push_back(control);
-}
+void Window::addControl(const Control& control) { m_controls.push_back(control); }
 
 void Window::addMenu(std::unique_ptr<Menu> mainMenu)
 {
@@ -116,85 +115,92 @@ int Window::registerHotkeys(std::span<Hotkey> hotkeys) const
 
 LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 {
+
+    switch (msg)
     {
-        switch (msg)
-        {
-        case WM_CREATE:
-            // createControls();
-            // Post a custom message to register controls after WM_CREATE
-            PostMessage(hwnd, WM_CREATE_CONTROLS, 0, 0);
-            break;
+    case WM_CREATE:
+    {
+        uFindMsg = RegisterWindowMessage(FINDMSGSTRING); // Register find message
+        // Post a custom message to register controls after WM_CREATE
+        PostMessage(hwnd, WM_CREATE_CONTROLS, 0, 0);
+    }
+    break;
 
-        case WM_CREATE_CONTROLS:
-            // createControls();
-            break;
-
-        case WM_COMMAND:
-        {
-            Command command{ LOWORD(wp) };
-            auto it{ m_registered_funcs.find(command) };
-            if (it != m_registered_funcs.end())
-            {
-                it->second();
-            }
-
-            if (command == Command::exit)
-            {
-                PostQuitMessage(0);
-            }
-
-            // switch (command)
-            //{
-            // case Command::openFile:
-            //{
-            //     // openFile(hwnd);
-            //     std::cout << "Opening...\n";
-            //     break;
-            // }
-
-            // case Command::saveFile:
-            //     // saveFile(hwnd);
-            //     break;
-
-            // default:
-            //     break;
-            // }
-
-            break;
-        }
-
-        case WM_HOTKEY:
-        {
-            Command hotkey{ LOWORD(wp) };
-            auto it{ m_registered_funcs.find(hotkey) };
-            if (it != m_registered_funcs.end())
-            {
-                it->second();
-            }
-
-            break;
-        }
-
-        case WM_SIZE:
-        {
-            RECT rc{};
-            GetClientRect(m_hwnd, &rc);
-            for (const auto& control : m_controls)
-            {
-                std::cout << "1\n";
-                MoveWindow(
-                    control.getHwnd(), 0, 0, rc.right, rc.bottom, TRUE);
-            }
-        }
+    case WM_CREATE_CONTROLS:
+        // createControls();
         break;
 
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            break;
-
-        default:
-            return DefWindowProc(hwnd, msg, wp, lp);
+    case WM_COMMAND:
+    {
+        Command command{ LOWORD(wp) };
+        auto it{ m_registered_funcs.find(command) };
+        if (it != m_registered_funcs.end())
+        {
+            it->second();
         }
+
+        if (command == Command::exit)
+        {
+            PostQuitMessage(0);
+        }
+
+        break;
+    }
+
+    case WM_HOTKEY:
+    {
+        Command hotkey{ LOWORD(wp) };
+        auto it{ m_registered_funcs.find(hotkey) };
+        if (it != m_registered_funcs.end())
+        {
+            it->second();
+        }
+
+        break;
+    }
+
+    case WM_SIZE:
+    {
+        RECT rc{};
+        GetClientRect(m_hwnd, &rc);
+        for (const auto& control : m_controls)
+        {
+            MoveWindow(control.getHwnd(), 0, 0, rc.right, rc.bottom, TRUE);
+        }
+    }
+    break;
+
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+
+    default:
+        if (msg == uFindMsg)
+        {
+            //LPFINDREPLACE lpfr;
+            //// Get pointer to FINDREPLACE structure from lParam.
+            //lpfr = (LPFINDREPLACE)lp;
+
+            //// If the FR_DIALOGTERM flag is set,
+            //// invalidate the handle that identifies the dialog box.
+            //if (lpfr->Flags & FR_DIALOGTERM)
+            //{
+            //    hdlg = NULL;
+            //    return 0;
+            //}
+
+            //// If the FR_FINDNEXT flag is set,
+            //// call the application-defined search routine
+            //// to search for the requested string.
+            //if (lpfr->Flags & FR_FINDNEXT)
+            //{
+            //    SearchFile(lpfr->lpstrFindWhat,
+            //               (BOOL)(lpfr->Flags & FR_DOWN),
+            //               (BOOL)(lpfr->Flags & FR_MATCHCASE));
+            //}
+            return 0; 
+        }
+        return DefWindowProc(hwnd, msg, wp, lp);
     }
 }
 
