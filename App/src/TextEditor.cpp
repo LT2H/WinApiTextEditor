@@ -49,7 +49,7 @@ TextEditor::TextEditor()
                         Core::Command::saveFileAs,
                         L"Save As...\tCtrl+Shift+S",
                         [this, mainWindowHwnd]()
-                        { saveFile(mainWindowHwnd, m_editField); });
+                        { saveFileAs(mainWindowHwnd, m_editField); });
    
     fileMenu.appendMenu(MF_SEPARATOR);
 
