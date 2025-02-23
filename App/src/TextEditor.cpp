@@ -7,47 +7,45 @@
 #include <array>
 #include <filesystem>
 
-TextEditor::TextEditor() {
+TextEditor::TextEditor()
+    : m_editField{ L"Edit",
+                 L"",
+                 WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER | ES_AUTOHSCROLL |
+                     ES_AUTOVSCROLL | WS_VSCROLL | WS_HSCROLL,
+                 10,
+                 50,
+                 400,
+                 300,
+                 Core::Window::getInstance().getHandle() }
+{
     auto& mainWindow{ Core::Window::getInstance() };
     mainWindow.registerHotkeys();
     auto mainWindowHwnd{ mainWindow.getHandle() };
-
-    Core::Control editField{ L"Edit",
-                             L"",
-                             WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
-                                 ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL |
-                                 WS_HSCROLL,
-                             10,
-                             50,
-                             400,
-                             300,
-                             mainWindowHwnd };
 
     Core::Menu mainMenu{ mainWindowHwnd };
     Core::Menu fileMenu;
     Core::Menu subMenu;
     Core::Menu helpMenu;
 
-    
     fileMenu.appendMenu(
         MF_STRING, Core::Command::newWindow, L"New Window\tCtrl+Shift+N");
     mainWindow.registerFunc(Core::Command::newWindow, [this] { launchNewWindow(); });
 
     fileMenu.appendMenu(MF_STRING, Core::Command::openFile, L"Open...\tCtrl+O");
     mainWindow.registerFunc(Core::Command::openFile,
-                            [this, mainWindowHwnd, &editField]()
-                            { openFile(mainWindowHwnd, editField); });
+                            [this, mainWindowHwnd]()
+                            { openFile(mainWindowHwnd, m_editField); });
 
     fileMenu.appendMenu(MF_STRING, Core::Command::saveFile, L"Save\tCtrl+S");
     mainWindow.registerFunc(Core::Command::saveFile,
-                            [this, mainWindowHwnd, &editField]()
-                            { saveFile(mainWindowHwnd, editField); });
+                            [this, mainWindowHwnd]()
+                            { saveFile(mainWindowHwnd, m_editField); });
 
     fileMenu.appendMenu(
         MF_STRING, Core::Command::saveFileAs, L"Save As...\tCtrl+Shift+S");
     mainWindow.registerFunc(Core::Command::saveFileAs,
-                            [this, mainWindowHwnd, &editField]()
-                            { saveFileAs(mainWindowHwnd, editField); });
+                            [this, mainWindowHwnd]()
+                            { saveFileAs(mainWindowHwnd, m_editField); });
 
     fileMenu.appendMenu(MF_SEPARATOR);
 
@@ -90,7 +88,7 @@ void TextEditor::openFile(HWND hwnd, const Core::Control& editField)
 
     if (GetOpenFileName(&ofn))
     {
-        currentFilePath = fileName.data(); // Store the selected file path
+        m_currentFilePath = fileName.data(); // Store the selected file path
 
         MessageBox(nullptr, fileName.data(), L"Selected File", MB_OK);
         displayFile(ofn.lpstrFile, editField);
@@ -99,13 +97,13 @@ void TextEditor::openFile(HWND hwnd, const Core::Control& editField)
 
 void TextEditor::saveFile(HWND hwnd, const Core::Control& editField)
 {
-    if (currentFilePath.empty())
+    if (m_currentFilePath.empty())
     {
         saveFileAs(hwnd, editField);
     }
     else
     {
-        writeFile(currentFilePath, editField);
+        writeFile(m_currentFilePath, editField);
     }
 }
 
@@ -124,7 +122,7 @@ void TextEditor::saveFileAs(HWND hwnd, const Core::Control& editField)
 
     if (GetSaveFileName(&ofn))
     {
-        currentFilePath = fileName.data(); // Store the file path
+        m_currentFilePath = fileName.data(); // Store the file path
 
         std::wstring_view filePath{ ofn.lpstrFile };
 

@@ -22,7 +22,7 @@ class TextEditor
 
     void launchNewWindow();
 
-private:
-    std::wstring currentFilePath{};
+  private:
+    std::wstring m_currentFilePath{};
+    Core::Control m_editField;
 };
-
