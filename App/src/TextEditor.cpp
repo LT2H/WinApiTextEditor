@@ -27,26 +27,30 @@ TextEditor::TextEditor()
     Core::Menu subMenu;
     Core::Menu helpMenu;
 
-    fileMenu.appendMenu(
-        MF_STRING, Core::Command::newWindow, L"New Window\tCtrl+Shift+N");
-    mainWindow.registerFunc(Core::Command::newWindow, [this] { launchNewWindow(); });
+    fileMenu.appendMenu(MF_STRING,
+                        Core::Command::newWindow,
+                        L"New Window\tCtrl+Shift+N",
+                        [this] { launchNewWindow(); });
 
-    fileMenu.appendMenu(MF_STRING, Core::Command::openFile, L"Open...\tCtrl+O");
-    mainWindow.registerFunc(Core::Command::openFile,
-                            [this, mainWindowHwnd]()
-                            { openFile(mainWindowHwnd, m_editField); });
+    fileMenu.appendMenu(MF_STRING,
+                        Core::Command::openFile,
+                        L"Open...\tCtrl+O",
+                        [this, mainWindowHwnd]()
+                        { openFile(mainWindowHwnd, m_editField); });
 
-    fileMenu.appendMenu(MF_STRING, Core::Command::saveFile, L"Save\tCtrl+S");
-    mainWindow.registerFunc(Core::Command::saveFile,
-                            [this, mainWindowHwnd]()
-                            { saveFile(mainWindowHwnd, m_editField); });
+    fileMenu.appendMenu(MF_STRING,
+                        Core::Command::saveFile,
+                        L"Save\tCtrl+S",
+                        [this, mainWindowHwnd]()
+                        { saveFile(mainWindowHwnd, m_editField); });
 
-    fileMenu.appendMenu(
-        MF_STRING, Core::Command::saveFileAs, L"Save As...\tCtrl+Shift+S");
-    mainWindow.registerFunc(Core::Command::saveFileAs,
-                            [this, mainWindowHwnd]()
-                            { saveFileAs(mainWindowHwnd, m_editField); });
 
+    fileMenu.appendMenu(MF_STRING,
+                        Core::Command::saveFileAs,
+                        L"Save As...\tCtrl+Shift+S",
+                        [this, mainWindowHwnd]()
+                        { saveFile(mainWindowHwnd, m_editField); });
+   
     fileMenu.appendMenu(MF_SEPARATOR);
 
     fileMenu.appendMenu(MF_STRING, Core::Command::exit, L"Exit");

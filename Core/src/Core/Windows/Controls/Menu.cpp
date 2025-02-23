@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "Core/Windows/Window.h"
 
 namespace Core
 {
@@ -99,6 +100,22 @@ void Menu::appendMenu(UINT flags, Command command, std::wstring_view windowName)
                // reinterpret_cast<UINT_PTR>(menu->getHwndMenu()),
                static_cast<int>(m_command),
                m_windowName.data());
+}
+
+void Menu::appendMenu(UINT flags, Command command, std::wstring_view windowName,
+                      std::function<void()> handler)
+{
+    m_flags      = flags;
+    m_command    = command;
+    m_windowName = windowName;
+
+    AppendMenu(m_hwndMenu,
+               m_flags,
+               // reinterpret_cast<UINT_PTR>(menu->getHwndMenu()),
+               static_cast<int>(m_command),
+               m_windowName.data());
+
+    Window::getInstance().registerFunc(m_command, handler);
 }
 
 void Menu::appendMenu(UINT flags) { AppendMenu(m_hwndMenu, flags, 0, nullptr); }
