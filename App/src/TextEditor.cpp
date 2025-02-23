@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <iostream>
 #include <array>
+#include <filesystem>
 
 int displayFile(const std::wstring& path, const Core::Control& editField)
 {
@@ -51,11 +52,14 @@ void saveFile(HWND hwnd, const Core::Control& editField)
     ofn.nMaxFile     = static_cast<DWORD>(fileName.size());
     ofn.lpstrFilter  = L"All Files\0*.*\0Source Files\0*.CPP\0Text Files\0*.TXT\0";
     ofn.nFilterIndex = 1;
+    ofn.Flags = OFN_OVERWRITEPROMPT; // This will show a built-in overwrite warning
 
     if (GetSaveFileName(&ofn))
     {
-        MessageBox(nullptr, fileName.data(), L"Saved File To", MB_OK);
+        std::wstring filePath{ ofn.lpstrFile };
+
         writeFile(ofn.lpstrFile, editField);
+        MessageBox(nullptr, fileName.data(), L"Saved File To", MB_OK);
     }
 }
 
