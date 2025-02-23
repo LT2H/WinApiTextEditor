@@ -16,6 +16,7 @@ enum class Command : int
     exit,
     newWindow,
     undo,
+    redo,
 };
 
 // inline std::unordered_map<Command, std::string> shortcutKeys{

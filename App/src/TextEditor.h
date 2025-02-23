@@ -29,14 +29,17 @@ class TextEditor
 
     void undo();
 
+    void redo();
+
   private:
     std::wstring m_currentFilePath{};
     Core::Control m_editField;
-    std::array<Core::Hotkey, 5> m_hotkeys{
+    std::array<Core::Hotkey, 6> m_hotkeys{
         { { MOD_CONTROL, Core::Command::openFile, 'O' },
           { MOD_CONTROL, Core::Command::saveFile, 'S' },
           { MOD_CONTROL | MOD_SHIFT, Core::Command::saveFileAs, 'S' },
           { MOD_CONTROL, Core::Command::undo, 'Z' },
+          { MOD_CONTROL, Core::Command::redo, 'Y' },
           { MOD_CONTROL, Core::Command::help, 'H' } }
     };
 };

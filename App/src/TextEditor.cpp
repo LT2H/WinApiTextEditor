@@ -2,6 +2,7 @@
 #include "Core/Windows/Window.h"
 
 #include <windows.h>
+#include <Richedit.h>
 
 #include <iostream>
 #include <array>
@@ -56,9 +57,11 @@ TextEditor::TextEditor()
 
     fileMenu.appendMenu(MF_STRING, Core::Command::exit, L"Exit");
 
-    editMenu.appendMenu(MF_STRING,
-                        Core::Command::undo,
-                        L"Undo\tCtrl+Z", [this] { undo(); });
+    editMenu.appendMenu(
+        MF_STRING, Core::Command::undo, L"Undo\tCtrl+Z", [this] { undo(); });
+
+    editMenu.appendMenu(
+        MF_STRING, Core::Command::redo, L"Redo\tCtrl+Y", [this] { redo(); });
 
     mainMenu.appendMenu(MF_POPUP, fileMenu.getHwndMenu(), L"File");
     mainMenu.appendMenu(MF_POPUP, editMenu.getHwndMenu(), L"Edit");
@@ -182,4 +185,6 @@ void TextEditor::launchNewWindow()
         nullptr, L"open", newWindowPath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 }
 
-void TextEditor::undo() { SendMessage(m_editField.getHwnd(), WM_UNDO, 0, 0); }
+void TextEditor::undo() { SendMessage(m_editField.getHwnd(), EM_UNDO, 0, 0); }
+
+void TextEditor::redo() { SendMessage(m_editField.getHwnd(), EM_REDO, 0, 0); }
