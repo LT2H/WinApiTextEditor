@@ -22,6 +22,8 @@ class TextEditor
 
     void launchNewWindow();
 
+    void undo();
+
   private:
     std::wstring m_currentFilePath{};
     Core::Control m_editField;

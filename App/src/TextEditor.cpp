@@ -9,14 +9,14 @@
 
 TextEditor::TextEditor()
     : m_editField{ L"Edit",
-                 L"",
-                 WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER | ES_AUTOHSCROLL |
-                     ES_AUTOVSCROLL | WS_VSCROLL | WS_HSCROLL,
-                 10,
-                 50,
-                 400,
-                 300,
-                 Core::Window::getInstance().getHandle() }
+                   L"",
+                   WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
+                       ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL | WS_HSCROLL,
+                   10,
+                   50,
+                   400,
+                   300,
+                   Core::Window::getInstance().getHandle() }
 {
     auto& mainWindow{ Core::Window::getInstance() };
     mainWindow.registerHotkeys();
@@ -24,6 +24,7 @@ TextEditor::TextEditor()
 
     Core::Menu mainMenu{ mainWindowHwnd };
     Core::Menu fileMenu;
+    Core::Menu editMenu;
     Core::Menu subMenu;
     Core::Menu helpMenu;
 
@@ -50,12 +51,17 @@ TextEditor::TextEditor()
                         L"Save As...\tCtrl+Shift+S",
                         [this, mainWindowHwnd]()
                         { saveFileAs(mainWindowHwnd, m_editField); });
-   
+
     fileMenu.appendMenu(MF_SEPARATOR);
 
     fileMenu.appendMenu(MF_STRING, Core::Command::exit, L"Exit");
 
+    editMenu.appendMenu(MF_STRING,
+                        Core::Command::undo,
+                        L"Undo\tCtrl+Z", [this] { undo(); });
+
     mainMenu.appendMenu(MF_POPUP, fileMenu.getHwndMenu(), L"File");
+    mainMenu.appendMenu(MF_POPUP, editMenu.getHwndMenu(), L"Edit");
 
     mainMenu.setMenu();
 }
@@ -175,3 +181,5 @@ void TextEditor::launchNewWindow()
     ShellExecuteW(
         nullptr, L"open", newWindowPath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 }
+
+void TextEditor::undo() { SendMessage(m_editField.getHwnd(), WM_UNDO, 0, 0); }

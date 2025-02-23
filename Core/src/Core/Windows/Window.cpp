@@ -103,6 +103,7 @@ int Window::registerHotkeys()
     m_hotkeys = { { MOD_CONTROL, Command::openFile, 'O' },
                   { MOD_CONTROL, Command::saveFile, 'S' },
                   { MOD_CONTROL | MOD_SHIFT, Command::saveFileAs, 'S' },
+                  { MOD_CONTROL, Command::undo, 'Z' },
                   { MOD_CONTROL, Command::help, 'H' } };
 
     for (auto& hotkey : m_hotkeys)
