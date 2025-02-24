@@ -197,9 +197,14 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 
             if (lpfr->Flags & FR_FINDNEXT)
             {
+                BOOL searchDown{ (lpfr->Flags & FR_DOWN)
+                                     ? TRUE
+                                     : FALSE }; // If FR_DOWN is set, search down;
+                                                // otherwise, search up
+
                 m_findDialog->searchFile(it->second.getHwnd(),
                                          lpfr->lpstrFindWhat,
-                                         (BOOL)(lpfr->Flags & FR_DOWN),
+                                         searchDown,
                                          (BOOL)(lpfr->Flags & FR_MATCHCASE));
             }
 
