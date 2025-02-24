@@ -7,23 +7,16 @@
 #include <iostream>
 #include <array>
 #include <filesystem>
+#include <tchar.h>
 
 TextEditor::TextEditor()
-    : m_editField{ L"Edit",
-                   L"",
-                   WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER |
-                       ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_VSCROLL | WS_HSCROLL,
-                   0,
-                   0,
-                   0,
-                   0,
-                   Core::Window::getInstance().getHandle() }
+    : m_editField{ L"Edit", 0, 0, 0, 0, Core::Window::getInstance().getHandle() }
 {
     auto& mainWindow{ Core::Window::getInstance() };
     mainWindow.registerHotkeys(m_hotkeys);
     auto mainWindowHwnd{ mainWindow.getHandle() };
 
-    mainWindow.addControl(m_editField);
+    mainWindow.registerControl(m_editField);
 
     Core::Menu mainMenu{ mainWindowHwnd };
     Core::Menu fileMenu;
@@ -178,41 +171,33 @@ int TextEditor::writeFile(std::wstring_view path, const Core::Control& editField
     outfile << buffer.str();
 }
 
-void TextEditor::showFindDialog(HWND hwnd)
+void TextEditor::showFindDialog(HWND mainWindowHwnd)
 {
-    std::vector<wchar_t> szFindWhat(80, L'\0'); // Mutable buffer using std::vector
+    m_findDialog = std::make_unique<Core::FindDialog>(mainWindowHwnd);
 
-    ZeroMemory(&m_fr, sizeof(FINDREPLACE));
-
-    m_fr.lStructSize   = sizeof(m_fr);
-    m_fr.hwndOwner   = hwnd;
-    m_fr.lpstrFindWhat = szFindWhat.data();
-    m_fr.wFindWhatLen  = static_cast<int>(szFindWhat.size());
-    m_fr.Flags         = 0;
-
-    m_hdlg = FindText(&m_fr); // Show the Find Dialog
+    Core::Window::getInstance().registerFindDialog(m_findDialog.get());
 }
 
-//void FindNextText()
+// void FindNextText()
 //{
-//    FINDTEXTEX ft{};
-//    ft.chrg.cpMin = 0;          // Start searching from the beginning
-//    ft.chrg.cpMax = -1;         // Search till the end
-//    ft.lpstrText  = szFindText; // Text to search
+//     FINDTEXTEX ft{};
+//     ft.chrg.cpMin = 0;          // Start searching from the beginning
+//     ft.chrg.cpMax = -1;         // Search till the end
+//     ft.lpstrText  = szFindText; // Text to search
 //
-//    int foundPos = SendMessage(hEdit, EM_FINDTEXTEX, FR_DOWN, (LPARAM)&ft);
-//    if (foundPos != -1)
-//    {
-//        // Select the found text
-//        SendMessage(hEdit, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
-//        SendMessage(hEdit, EM_SCROLLCARET, 0, 0); // Scroll to selection
-//    }
-//    else
-//    {
-//        MessageBox(
-//            NULL, _T("Text not found!"), _T("Find"), MB_OK | MB_ICONINFORMATION);
-//    }
-//}
+//     int foundPos = SendMessage(hEdit, EM_FINDTEXTEX, FR_DOWN, (LPARAM)&ft);
+//     if (foundPos != -1)
+//     {
+//         // Select the found text
+//         SendMessage(hEdit, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
+//         SendMessage(hEdit, EM_SCROLLCARET, 0, 0); // Scroll to selection
+//     }
+//     else
+//     {
+//         MessageBox(
+//             NULL, _T("Text not found!"), _T("Find"), MB_OK | MB_ICONINFORMATION);
+//     }
+// }
 
 void TextEditor::launchNewWindow()
 {

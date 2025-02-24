@@ -32,6 +32,9 @@ class Control
     Control(std::wstring className, std::wstring windowName, DWORD style, int x,
             int y, int width, int height, HWND hwndParent);
 
+    Control(std::wstring className, int x, int y, int width, int height,
+            HWND hwndParent);
+
     // void create();
 
     constexpr std::wstring getClassName() const { return m_className; }

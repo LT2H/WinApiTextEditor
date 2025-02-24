@@ -1,18 +1,21 @@
-#include "Window.h"
 #include "Core/Utils/utils.h"
 #include "Core/Windows/Controls/Menu.h"
+#include "Window.h"
+#include <Core/Windows/Controls/FindDialog.h>
+#include <tchar.h>
 #include <string>
 #include <iostream>
 #include <unordered_map>
 #include <span>
+#include <commdlg.h>
 
 namespace Core
 {
-UINT uFindMsg{};
-
 Window* Window::m_instance{ nullptr };
+UINT Window::m_findMsg{};
 HWND Window::m_hwnd{};
-std::vector<Control> Window::m_controls{};
+std::unordered_map<std::wstring, Control> Window::m_controls{};
+FindDialog* Window::m_findDialog{};
 std::vector<std::unique_ptr<Menu>> Window::m_menus{};
 std::unordered_map<Command, std::function<void()>> Window::m_registered_funcs{};
 
@@ -79,7 +82,12 @@ Window& Window::getInstance()
     return *m_instance;
 }
 
-void Window::addControl(const Control& control) { m_controls.push_back(control); }
+void Window::registerControl(const Control& control)
+{
+    m_controls[control.getClassName()] = control;
+}
+
+void Window::registerFindDialog(FindDialog* dialog) { m_findDialog = dialog; }
 
 void Window::addMenu(std::unique_ptr<Menu> mainMenu)
 {
@@ -115,20 +123,18 @@ int Window::registerHotkeys(std::span<Hotkey> hotkeys) const
 
 LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 {
-
     switch (msg)
     {
     case WM_CREATE:
     {
-        uFindMsg = RegisterWindowMessage(FINDMSGSTRING); // Register find message
+        m_findMsg = RegisterWindowMessage(FINDMSGSTRING); // Register find message
         // Post a custom message to register controls after WM_CREATE
-        PostMessage(hwnd, WM_CREATE_CONTROLS, 0, 0);
+        // PostMessage(hwnd, WM_CREATE_CONTROLS, 0, 0);
     }
     break;
 
-    case WM_CREATE_CONTROLS:
-        // createControls();
-        break;
+        // case WM_CREATE_CONTROLS:
+        //     break;
 
     case WM_COMMAND:
     {
@@ -165,7 +171,7 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         GetClientRect(m_hwnd, &rc);
         for (const auto& control : m_controls)
         {
-            MoveWindow(control.getHwnd(), 0, 0, rc.right, rc.bottom, TRUE);
+            MoveWindow(control.second.getHwnd(), 0, 0, rc.right, rc.bottom, TRUE);
         }
     }
     break;
@@ -175,30 +181,30 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         break;
 
     default:
-        if (msg == uFindMsg)
+        if (msg == m_findMsg)
         {
-            //LPFINDREPLACE lpfr;
-            //// Get pointer to FINDREPLACE structure from lParam.
-            //lpfr = (LPFINDREPLACE)lp;
+            std::cout << "Find message received\n";
+            LPFINDREPLACE lpfr{ reinterpret_cast<LPFINDREPLACE>(lp) };
 
-            //// If the FR_DIALOGTERM flag is set,
-            //// invalidate the handle that identifies the dialog box.
-            //if (lpfr->Flags & FR_DIALOGTERM)
-            //{
-            //    hdlg = NULL;
-            //    return 0;
-            //}
+            if (lpfr->Flags & FR_FINDNEXT)
+            {
+                auto it{ m_controls.find(L"Edit") };
+                if (it != m_controls.end())
+                {
+                    std::cout << "Searching...\n";
 
-            //// If the FR_FINDNEXT flag is set,
-            //// call the application-defined search routine
-            //// to search for the requested string.
-            //if (lpfr->Flags & FR_FINDNEXT)
-            //{
-            //    SearchFile(lpfr->lpstrFindWhat,
-            //               (BOOL)(lpfr->Flags & FR_DOWN),
-            //               (BOOL)(lpfr->Flags & FR_MATCHCASE));
-            //}
-            return 0; 
+                    m_findDialog->searchFile(it->second.getHwnd(),
+                                             lpfr->lpstrFindWhat,
+                                             (BOOL)(lpfr->Flags & FR_DOWN),
+                                             (BOOL)(lpfr->Flags & FR_MATCHCASE));
+                }
+            }
+            else if (lpfr->Flags & FR_DIALOGTERM)
+            {
+                std::cout << "Dialog terminated\n";
+            }
+
+            return 0;
         }
         return DefWindowProc(hwnd, msg, wp, lp);
     }

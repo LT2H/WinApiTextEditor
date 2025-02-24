@@ -1,4 +1,5 @@
 #include <Core/Windows/Controls/Control.h>
+#include <Core/Windows/Controls/FindDialog.h>
 #include <Core/utils/utils.h>
 #include <Core/Utils/Hotkey.h>
 
@@ -9,6 +10,7 @@
 #include <sstream>
 #include <vector>
 #include <array>
+#include <memory>
 
 class TextEditor
 {
@@ -25,7 +27,7 @@ class TextEditor
 
     int writeFile(std::wstring_view path, const Core::Control& editField);
 
-    void showFindDialog(HWND hwnd);
+    void showFindDialog(HWND mainWindowHwnd);
 
     void launchNewWindow();
 
@@ -34,8 +36,6 @@ class TextEditor
     void redo();
 
     void selectAll();
-
-    HWND getHdlg() { return m_hdlg; }
 
   private:
     std::wstring m_currentFilePath{};
@@ -50,6 +50,5 @@ class TextEditor
         { MOD_CONTROL, Core::Command::showFindDialog, 'F' },
     } };
 
-    FINDREPLACE m_fr{};
-    HWND m_hdlg{};
+    std::unique_ptr<Core::FindDialog> m_findDialog;
 };
