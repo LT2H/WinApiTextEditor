@@ -12,10 +12,6 @@
 
 namespace Core
 {
-
-constexpr int OPEN_FILE_BUTTON{ 1 };
-constexpr int SAVE_FILE_BUTTON{ 2 };
-
 class Window
 {
   public:

@@ -60,22 +60,11 @@ void ReplaceDialog::findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
     ft.chrg.cpMin = cr.cpMax;
     ft.chrg.cpMax = -1;
     ft.lpstrText  = searchStr;
-    // ft.chrg.cpMax = GetWindowTextLength(hEditField); // Use total length
 
     int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, 0, (LPARAM)&ft) };
 
     if (foundPos != -1)
     {
-        if (!szReplaceText || szReplaceText[0] == '\0')
-        {
-            MessageBox(NULL,
-                       _T("Replace text is empty!"),
-                       _T("Error"),
-                       MB_OK | MB_ICONERROR);
-            return;
-        }
-
-
         SendMessage(hEditField, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
         SendMessage(hEditField, EM_REPLACESEL, TRUE, (LPARAM)szReplaceText);
     }

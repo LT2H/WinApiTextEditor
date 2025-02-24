@@ -192,51 +192,34 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         {
             LPFINDREPLACE lpfr{ reinterpret_cast<LPFINDREPLACE>(lp) };
             auto it{ m_controls.find(L"Edit") };
+            if (it == m_controls.end())
+                return 0;
 
             if (lpfr->Flags & FR_FINDNEXT)
             {
-                if (it != m_controls.end())
-                {
-                    m_findDialog->searchFile(it->second.getHwnd(),
-                                             lpfr->lpstrFindWhat,
-                                             (BOOL)(lpfr->Flags & FR_DOWN),
-                                             (BOOL)(lpfr->Flags & FR_MATCHCASE));
-                }
+                m_findDialog->searchFile(it->second.getHwnd(),
+                                         lpfr->lpstrFindWhat,
+                                         (BOOL)(lpfr->Flags & FR_DOWN),
+                                         (BOOL)(lpfr->Flags & FR_MATCHCASE));
             }
 
             if (lpfr->Flags & FR_REPLACE)
             {
-                if (it != m_controls.end())
-                {
-                    if (m_replaceDialog)
-                    {
-                        m_replaceDialog->findAndReplaceText(it->second.getHwnd(),
-                                                            lpfr->lpstrFindWhat,
-                                                            lpfr->lpstrReplaceWith);
-                    }
-                }
+                m_replaceDialog->findAndReplaceText(it->second.getHwnd(),
+                                                    lpfr->lpstrFindWhat,
+                                                    lpfr->lpstrReplaceWith);
             }
 
             if (lpfr->Flags & FR_REPLACEALL)
             {
-                if (it != m_controls.end())
-                {
-                    if (m_replaceDialog)
-                    {
-                        m_replaceDialog->findAndReplaceAllText(
-                            it->second.getHwnd(),
-                            lpfr->lpstrFindWhat,
-                            lpfr->lpstrReplaceWith);
-                    }
-                }
+                m_replaceDialog->findAndReplaceAllText(it->second.getHwnd(),
+                                                       lpfr->lpstrFindWhat,
+                                                       lpfr->lpstrReplaceWith);
             }
 
             if (lpfr->Flags & FR_DIALOGTERM)
             {
-                if (it != m_controls.end())
-                {
-                    m_findDialog->clearSelection(it->second.getHwnd());
-                }
+                m_findDialog->clearSelection(it->second.getHwnd());
             }
 
             return 0;
