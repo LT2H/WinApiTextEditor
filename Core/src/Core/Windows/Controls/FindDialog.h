@@ -14,6 +14,8 @@ class FindDialog
     void searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
                     BOOL matchCase);
 
+    void clearSelection(HWND hEditField);
+
     HWND getHdlg() const { return m_hdlg; }
     std::vector<wchar_t> getSZFindWhat() const { return m_szFindWhat; }
 

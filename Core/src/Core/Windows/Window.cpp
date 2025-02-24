@@ -208,8 +208,6 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             {
                 if (it != m_controls.end())
                 {
-                    std::cout << "Found\n";
-
                     if (m_replaceDialog)
                     {
                         m_replaceDialog->findAndReplaceText(it->second.getHwnd(),
@@ -217,9 +215,13 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                                                             lpfr->lpstrReplaceWith);
                     }
                 }
-                else
+            }
+
+            if (lpfr->Flags & FR_DIALOGTERM)
+            {
+                if (it != m_controls.end())
                 {
-                    std::cout << "Not Found\n";
+                    m_findDialog->clearSelection(it->second.getHwnd());
                 }
             }
 

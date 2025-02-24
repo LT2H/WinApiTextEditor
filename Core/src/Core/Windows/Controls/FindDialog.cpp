@@ -85,5 +85,18 @@ void FindDialog::searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
     }
 }
 
+void FindDialog::clearSelection(HWND hEditField)
+{
+    // Reset character formatting for the whole text
+    CHARFORMAT2 cf{};
+    cf.cbSize      = sizeof(CHARFORMAT2);
+    cf.dwMask      = CFM_BACKCOLOR;
+    cf.crBackColor = GetSysColor(COLOR_WINDOW); // Reset to default background color
+
+    SendMessage(hEditField, EM_SETSEL, 0, -1);  // Select all text
+    SendMessage(hEditField, EM_SETCHARFORMAT, SCF_ALL, (LPARAM)&cf);
+    SendMessage(hEditField, EM_SETSEL, -1, 0);  // Deselect text
+}
+
 
 } // namespace Core
