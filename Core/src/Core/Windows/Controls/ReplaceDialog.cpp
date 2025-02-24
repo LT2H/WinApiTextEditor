@@ -38,6 +38,16 @@ ReplaceDialog::ReplaceDialog(HWND mainWindohwnd)
     m_fr.wReplaceWithLen  = static_cast<int>(m_szReplaceText.size());
 
     m_hdlg = ReplaceText(&m_fr);
+
+    // Hide "Find Next" button after the dialog is created
+    if (m_hdlg)
+    {
+        HWND hFindNextButton{ GetDlgItem(m_hdlg, IDOK) };
+        if (hFindNextButton)
+        {
+            ShowWindow(hFindNextButton, SW_HIDE); // Hide button
+        }
+    }
 }
 
 void ReplaceDialog::findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
