@@ -68,6 +68,12 @@ TextEditor::TextEditor()
                         L"Find...\tCtrl+F",
                         [this, mainWindowHwnd] { showFindDialog(mainWindowHwnd); });
 
+    editMenu.appendMenu(MF_STRING,
+                        Core::Command::showReplaceDialog,
+                        L"Replace...\tCtrl+H",
+                        [this, mainWindowHwnd]
+                        { showReplaceDialog(mainWindowHwnd); });
+
     mainMenu.appendMenu(MF_POPUP, fileMenu.getHwndMenu(), L"File");
     mainMenu.appendMenu(MF_POPUP, editMenu.getHwndMenu(), L"Edit");
 
@@ -176,6 +182,13 @@ void TextEditor::showFindDialog(HWND mainWindowHwnd)
     m_findDialog = std::make_unique<Core::FindDialog>(mainWindowHwnd);
 
     Core::Window::getInstance().registerFindDialog(m_findDialog.get());
+}
+
+void TextEditor::showReplaceDialog(HWND mainWindowHwnd)
+{
+    m_replaceDialog = std::make_unique<Core::ReplaceDialog>(mainWindowHwnd);
+
+    Core::Window::getInstance().registerReplaceDialog(m_replaceDialog.get());
 }
 
 // void FindNextText()

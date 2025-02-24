@@ -2,6 +2,7 @@
 #include <Core/Windows/Controls/Control.h>
 #include <Core/Windows/Controls/Menu.h>
 #include <Core/Windows/Controls/FindDialog.h>
+#include <Core/Windows/Controls/ReplaceDialog.h>
 #include <Core/utils/utils.h>
 #include <Core/utils/Hotkey.h>
 #include <windows.h>
@@ -23,6 +24,8 @@ class Window
     void registerControl(const Control& control);
 
     void registerFindDialog(FindDialog* dialog);
+
+    void registerReplaceDialog(ReplaceDialog* dialog);
 
     void addMenu(std::unique_ptr<Menu> mainMenu);
 
@@ -47,6 +50,7 @@ class Window
     static std::unordered_map<std::wstring, Control> m_controls;
     static std::unordered_map<int, HWND> m_control_handles;
     static FindDialog* m_findDialog;
+    static ReplaceDialog* m_replaceDialog;
     static std::vector<std::unique_ptr<Menu>> m_menus;
 
     static std::unordered_map<Command, std::function<void()>> m_registered_funcs;

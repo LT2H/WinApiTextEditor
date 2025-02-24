@@ -16,6 +16,7 @@ UINT Window::m_findMsg{};
 HWND Window::m_hwnd{};
 std::unordered_map<std::wstring, Control> Window::m_controls{};
 FindDialog* Window::m_findDialog{};
+ReplaceDialog* Window::m_replaceDialog{};
 std::vector<std::unique_ptr<Menu>> Window::m_menus{};
 std::unordered_map<Command, std::function<void()>> Window::m_registered_funcs{};
 
@@ -89,6 +90,11 @@ void Window::registerControl(const Control& control)
 
 void Window::registerFindDialog(FindDialog* dialog) { m_findDialog = dialog; }
 
+void Window::registerReplaceDialog(ReplaceDialog* dialog)
+{
+    m_replaceDialog = dialog;
+}
+
 void Window::addMenu(std::unique_ptr<Menu> mainMenu)
 {
     m_menus.push_back(std::move(mainMenu));
@@ -128,7 +134,8 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     case WM_CREATE:
     {
         m_findMsg = RegisterWindowMessage(FINDMSGSTRING); // Register find message
-        // Post a custom message to register controls after WM_CREATE
+        // m_replaceMsg = RegisterWindowMessage(FINDMSGSTRING); // Register replace
+        // message Post a custom message to register controls after WM_CREATE
         // PostMessage(hwnd, WM_CREATE_CONTROLS, 0, 0);
     }
     break;
@@ -183,29 +190,42 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     default:
         if (msg == m_findMsg)
         {
-            std::cout << "Find message received\n";
             LPFINDREPLACE lpfr{ reinterpret_cast<LPFINDREPLACE>(lp) };
+            auto it{ m_controls.find(L"Edit") };
 
             if (lpfr->Flags & FR_FINDNEXT)
             {
-                auto it{ m_controls.find(L"Edit") };
                 if (it != m_controls.end())
                 {
-                    std::cout << "Searching...\n";
-
                     m_findDialog->searchFile(it->second.getHwnd(),
                                              lpfr->lpstrFindWhat,
                                              (BOOL)(lpfr->Flags & FR_DOWN),
                                              (BOOL)(lpfr->Flags & FR_MATCHCASE));
                 }
             }
-            else if (lpfr->Flags & FR_DIALOGTERM)
+
+            if (lpfr->Flags & (FR_REPLACE | FR_REPLACEALL))
             {
-                std::cout << "Dialog terminated\n";
+                if (it != m_controls.end())
+                {
+                    std::cout << "Found\n";
+
+                    if (m_replaceDialog)
+                    {
+                        m_replaceDialog->findAndReplaceText(it->second.getHwnd(),
+                                                            lpfr->lpstrFindWhat,
+                                                            lpfr->lpstrReplaceWith);
+                    }
+                }
+                else
+                {
+                    std::cout << "Not Found\n";
+                }
             }
 
             return 0;
         }
+
         return DefWindowProc(hwnd, msg, wp, lp);
     }
 }

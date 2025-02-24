@@ -19,6 +19,7 @@ enum class Command : int
     redo,
     selectAll,
     showFindDialog,
+    showReplaceDialog,
 };
 
 // inline std::unordered_map<Command, std::string> shortcutKeys{

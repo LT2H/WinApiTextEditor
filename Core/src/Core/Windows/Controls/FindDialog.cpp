@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <Richedit.h>
 #include <tchar.h>
+
 namespace Core
 {
 FindDialog::FindDialog(HWND mainWindohwnd) : m_szFindWhat(80, L'\0')
@@ -18,6 +19,36 @@ FindDialog::FindDialog(HWND mainWindohwnd) : m_szFindWhat(80, L'\0')
     m_hdlg = FindText(&m_fr);
 }
 
+// void FindAndReplaceText()
+//{
+//     if (_tcslen(szFindText) == 0 || _tcslen(szReplaceText) == 0)
+//         return;
+//
+//     FINDTEXTEX ft{};
+//     CHARRANGE cr{};
+//     SendMessage(hEdit, EM_EXGETSEL, 0, (LPARAM)&cr);
+//
+//     ft.chrg.cpMin = cr.cpMax;
+//     ft.chrg.cpMax = -1;
+//     ft.lpstrText  = szFindText;
+//
+//     int foundPos = SendMessage(hEdit, EM_FINDTEXTEX, FR_DOWN, (LPARAM)&ft);
+//     if (foundPos != -1)
+//     {
+//         // Select the found text
+//         SendMessage(hEdit, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
+//
+//         // Replace text
+//         SendMessage(hEdit, EM_REPLACESEL, TRUE, (LPARAM)szReplaceText);
+//     }
+//     else
+//     {
+//         MessageBox(
+//             NULL, _T("Text not found!"), _T("Replace"), MB_OK |
+//             MB_ICONINFORMATION);
+//     }
+// }
+
 void FindDialog::searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
                             BOOL matchCase)
 {
@@ -29,15 +60,13 @@ void FindDialog::searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
     ft.chrg.cpMax = -1;       // Search till end
     ft.lpstrText  = searchStr;
 
-    int flags = searchDown ? FR_DOWN : 0;
+    int flags{ searchDown ? FR_DOWN : 0 };
     if (matchCase)
         flags |= FR_MATCHCASE;
 
-    int foundPos = SendMessage(hEditField, EM_FINDTEXTEX, flags, (LPARAM)&ft);
+    int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, flags, (LPARAM)&ft) };
     if (foundPos != -1)
     {
-        std::cout << "Found\n";
-
         SendMessage(hEditField, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
         SendMessage(hEditField, EM_SCROLLCARET, 0, 0);
 
@@ -45,7 +74,7 @@ void FindDialog::searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
         CHARFORMAT2 cf{};
         cf.cbSize      = sizeof(CHARFORMAT2);
         cf.dwMask      = CFM_BACKCOLOR;    // Enable background color change
-        cf.crBackColor = RGB(0, 120, 215); // Blue background (Windows Accent Blue)
+        cf.crBackColor = RGB(0, 120, 215); // Blue background
 
         SendMessage(hEditField, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
     }

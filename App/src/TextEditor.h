@@ -1,5 +1,6 @@
 #include <Core/Windows/Controls/Control.h>
 #include <Core/Windows/Controls/FindDialog.h>
+#include <Core/Windows/Controls/ReplaceDialog.h>
 #include <Core/utils/utils.h>
 #include <Core/Utils/Hotkey.h>
 
@@ -29,6 +30,8 @@ class TextEditor
 
     void showFindDialog(HWND mainWindowHwnd);
 
+    void showReplaceDialog(HWND mainWindowHwnd);
+
     void launchNewWindow();
 
     void undo();
@@ -40,7 +43,7 @@ class TextEditor
   private:
     std::wstring m_currentFilePath{};
     Core::Control m_editField;
-    std::array<Core::Hotkey, 7> m_hotkeys{ {
+    std::array<Core::Hotkey, 8> m_hotkeys{ {
         { MOD_CONTROL, Core::Command::openFile, 'O' },
         { MOD_CONTROL, Core::Command::saveFile, 'S' },
         { MOD_CONTROL | MOD_SHIFT, Core::Command::saveFileAs, 'S' },
@@ -48,7 +51,9 @@ class TextEditor
         { MOD_CONTROL, Core::Command::redo, 'Y' },
         { MOD_CONTROL, Core::Command::selectAll, 'A' },
         { MOD_CONTROL, Core::Command::showFindDialog, 'F' },
+        { MOD_CONTROL, Core::Command::showReplaceDialog, 'H' },
     } };
 
     std::unique_ptr<Core::FindDialog> m_findDialog;
+    std::unique_ptr<Core::ReplaceDialog> m_replaceDialog;
 };
