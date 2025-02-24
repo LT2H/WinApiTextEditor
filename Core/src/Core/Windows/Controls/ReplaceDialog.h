@@ -14,6 +14,9 @@ class ReplaceDialog
     void findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
                             LPCTSTR szReplaceText);
 
+    void findAndReplaceAllText(HWND hEditField, LPCTSTR searchStr,
+                               LPCTSTR szReplaceText);
+
     HWND getHdlg() const { return m_hdlg; }
     std::vector<wchar_t> getSZFindWhat() const { return m_szFindWhat; }
 

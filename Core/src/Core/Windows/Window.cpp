@@ -204,7 +204,7 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                 }
             }
 
-            if (lpfr->Flags & (FR_REPLACE | FR_REPLACEALL))
+            if (lpfr->Flags & FR_REPLACE)
             {
                 if (it != m_controls.end())
                 {
@@ -213,6 +213,20 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                         m_replaceDialog->findAndReplaceText(it->second.getHwnd(),
                                                             lpfr->lpstrFindWhat,
                                                             lpfr->lpstrReplaceWith);
+                    }
+                }
+            }
+
+            if (lpfr->Flags & FR_REPLACEALL)
+            {
+                if (it != m_controls.end())
+                {
+                    if (m_replaceDialog)
+                    {
+                        m_replaceDialog->findAndReplaceAllText(
+                            it->second.getHwnd(),
+                            lpfr->lpstrFindWhat,
+                            lpfr->lpstrReplaceWith);
                     }
                 }
             }

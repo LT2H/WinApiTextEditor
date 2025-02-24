@@ -76,4 +76,30 @@ void ReplaceDialog::findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
     }
 }
 
+void ReplaceDialog::findAndReplaceAllText(HWND hEditField, LPCTSTR searchStr,
+                                          LPCTSTR szReplaceText)
+{
+    FINDTEXTEX ft{};
+    CHARRANGE cr{};
+    SendMessage(hEditField, EM_EXGETSEL, 0, (LPARAM)&cr);
+
+    ft.chrg.cpMin = cr.cpMax;
+    ft.chrg.cpMax = -1;
+    ft.lpstrText  = searchStr;
+
+    while (true)
+    {
+        int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, 0, (LPARAM)&ft) };
+        if (foundPos != -1)
+        {
+            SendMessage(hEditField, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
+            SendMessage(hEditField, EM_REPLACESEL, TRUE, (LPARAM)szReplaceText);
+        }
+        else
+        {
+            break;
+        }
+    }
+}
+
 } // namespace Core
