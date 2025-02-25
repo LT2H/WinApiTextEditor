@@ -195,16 +195,16 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             if (it == m_controls.end())
                 return 0;
 
+            BOOL searchDown{ (lpfr->Flags & FR_DOWN) ? TRUE
+                                                     : FALSE }; // Search direction
+            BOOL matchCase{ (lpfr->Flags & FR_MATCHCASE) ? TRUE
+                                                         : FALSE }; // Match case
+            BOOL matchWholeWord{ (lpfr->Flags & FR_WHOLEWORD)
+                                     ? TRUE
+                                     : FALSE };                     // Whole word
+
             if (lpfr->Flags & FR_FINDNEXT)
             {
-                BOOL searchDown{ (lpfr->Flags & FR_DOWN)
-                                     ? TRUE
-                                     : FALSE }; // Search direction
-                BOOL matchCase{ (lpfr->Flags & FR_MATCHCASE) ? TRUE
-                                                             : FALSE }; // Match case
-                BOOL matchWholeWord{ (lpfr->Flags & FR_WHOLEWORD)
-                                         ? TRUE
-                                         : FALSE };                     // Whole word
 
                 m_findDialog->searchFile(it->second.getHwnd(),
                                          lpfr->lpstrFindWhat,
@@ -217,14 +217,18 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             {
                 m_replaceDialog->findAndReplaceText(it->second.getHwnd(),
                                                     lpfr->lpstrFindWhat,
-                                                    lpfr->lpstrReplaceWith);
+                                                    lpfr->lpstrReplaceWith,
+                                                    matchCase,
+                                                    matchWholeWord);
             }
 
             if (lpfr->Flags & FR_REPLACEALL)
             {
                 m_replaceDialog->findAndReplaceAllText(it->second.getHwnd(),
                                                        lpfr->lpstrFindWhat,
-                                                       lpfr->lpstrReplaceWith);
+                                                       lpfr->lpstrReplaceWith,
+                                                       matchCase,
+                                                       matchWholeWord);
             }
 
             return 0;

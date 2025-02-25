@@ -12,10 +12,11 @@ class ReplaceDialog
     ReplaceDialog(HWND mainWindohwnd);
 
     void findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
-                            LPCTSTR szReplaceText);
+                            LPCTSTR szReplaceText, BOOL matchCase, BOOL wholeWord);
 
     void findAndReplaceAllText(HWND hEditField, LPCTSTR searchStr,
-                               LPCTSTR szReplaceText);
+                               LPCTSTR szReplaceText, BOOL matchCase,
+                               BOOL wholeWord);
 
     HWND getHdlg() const { return m_hdlg; }
     std::vector<wchar_t> getSZFindWhat() const { return m_szFindWhat; }

@@ -51,7 +51,8 @@ ReplaceDialog::ReplaceDialog(HWND mainWindohwnd)
 }
 
 void ReplaceDialog::findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
-                                       LPCTSTR szReplaceText)
+                                       LPCTSTR szReplaceText, BOOL matchCase,
+                                       BOOL wholeWord)
 {
     FINDTEXTEX ft{};
     CHARRANGE cr{};
@@ -61,7 +62,17 @@ void ReplaceDialog::findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
     ft.chrg.cpMax = -1;
     ft.lpstrText  = searchStr;
 
-    int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, FR_DOWN, (LPARAM)&ft) };
+    int flags{ FR_DOWN };
+    if (matchCase)
+    {
+        flags |= FR_MATCHCASE;
+    }
+    if (wholeWord)
+    {
+        flags |= FR_WHOLEWORD;
+    }
+
+    int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, flags, (LPARAM)&ft) };
 
     if (foundPos != -1)
     {
@@ -76,7 +87,8 @@ void ReplaceDialog::findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
 }
 
 void ReplaceDialog::findAndReplaceAllText(HWND hEditField, LPCTSTR searchStr,
-                                          LPCTSTR szReplaceText)
+                                          LPCTSTR szReplaceText, BOOL matchCase,
+                                          BOOL wholeWord)
 {
     FINDTEXTEX ft{};
     CHARRANGE cr{};
@@ -86,10 +98,20 @@ void ReplaceDialog::findAndReplaceAllText(HWND hEditField, LPCTSTR searchStr,
     ft.chrg.cpMax = -1;
     ft.lpstrText  = searchStr;
 
+    int flags{ FR_DOWN };
+    if (matchCase)
+    {
+        flags |= FR_MATCHCASE;
+    }
+    if (wholeWord)
+    {
+        flags |= FR_WHOLEWORD;
+    }
+
     while (true)
     {
         int64_t foundPos{ SendMessage(
-            hEditField, EM_FINDTEXTEX, FR_DOWN, (LPARAM)&ft) };
+            hEditField, EM_FINDTEXTEX, flags, (LPARAM)&ft) };
         if (foundPos != -1)
         {
             SendMessage(hEditField, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
