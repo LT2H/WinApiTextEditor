@@ -22,12 +22,6 @@ enum class Command : int
     showReplaceDialog,
 };
 
-// inline std::unordered_map<Command, std::string> shortcutKeys{
-//     { Command::nothing, "A" },
-//     { Command::openFile, "O" },
-//     { Command::saveFileAs, "S" }
-// };
-
 void enableDebugConsole();
 
 } // namespace Core
