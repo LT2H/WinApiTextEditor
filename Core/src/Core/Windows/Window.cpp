@@ -127,6 +127,16 @@ int Window::registerHotkeys(std::span<Hotkey> hotkeys) const
     }
 }
 
+int Window::promptSaveBeforeClose()
+{
+    int result{ MessageBox(m_hwnd,
+                           L"Do you want to save changes?",
+                           L"Save Changes",
+                           MB_YESNOCANCEL | MB_ICONWARNING) };
+
+    return result;
+}
+
 LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 {
     switch (msg)
@@ -150,11 +160,6 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         if (it != m_registered_funcs.end())
         {
             it->second();
-        }
-
-        if (command == Command::exit)
-        {
-            PostQuitMessage(0);
         }
 
         break;
@@ -183,9 +188,30 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     }
     break;
 
-    case WM_DESTROY:
-        PostQuitMessage(0);
+    case WM_CLOSE:
+    {
+        int choice{ promptSaveBeforeClose() };
+        switch (choice)
+        {
+        case IDYES:
+        {
+            auto it{ m_registered_funcs.find(Core::Command::saveFile) };
+            if (it != m_registered_funcs.end())
+            {
+                it->second();
+            }
+        }
         break;
+        case IDNO:
+            break;
+        case IDCANCEL:
+            return 0;
+        default:
+            break;
+        }
+        PostQuitMessage(0);
+    }
+    break;
 
     default:
         if (msg == m_findMsg)

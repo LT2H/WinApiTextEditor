@@ -29,6 +29,8 @@ class Window
 
     int registerHotkeys(std::span<Hotkey> m_hotkeys) const;
 
+    static int promptSaveBeforeClose();
+
     static Window& initialize(HINSTANCE hInst, LPCWSTR cursorId, int color,
                               std::wstring className, std::wstring windowName, int x,
                               int y, int width, int height, HWND hwndParent);
