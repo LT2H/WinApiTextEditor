@@ -227,11 +227,6 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                                                        lpfr->lpstrReplaceWith);
             }
 
-            if (lpfr->Flags & FR_DIALOGTERM)
-            {
-                m_findDialog->clearSelection(it->second.getHwnd());
-            }
-
             return 0;
         }
 

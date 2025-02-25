@@ -77,16 +77,14 @@ void FindDialog::searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
     int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, flags, (LPARAM)&ft) };
     if (foundPos != -1)
     {
+        // Select the found text
         SendMessage(hEditField, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
+
+        // Ensure selection remains visible
+        SendMessage(hEditField, EM_HIDESELECTION, FALSE, FALSE);
+
+        // Scroll to the selection
         SendMessage(hEditField, EM_SCROLLCARET, 0, 0);
-
-        // Apply Character Format
-        CHARFORMAT2 cf{};
-        cf.cbSize      = sizeof(CHARFORMAT2);
-        cf.dwMask      = CFM_BACKCOLOR;    // Enable background color change
-        cf.crBackColor = RGB(0, 120, 215); // Blue background
-
-        SendMessage(hEditField, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
     }
     else
     {
@@ -94,19 +92,5 @@ void FindDialog::searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
             NULL, _T("Text not found!"), _T("Find"), MB_OK | MB_ICONINFORMATION);
     }
 }
-
-void FindDialog::clearSelection(HWND hEditField)
-{
-    // Reset character formatting for the whole text
-    CHARFORMAT2 cf{};
-    cf.cbSize      = sizeof(CHARFORMAT2);
-    cf.dwMask      = CFM_BACKCOLOR;
-    cf.crBackColor = GetSysColor(COLOR_WINDOW); // Reset to default background color
-
-    SendMessage(hEditField, EM_SETSEL, 0, -1);  // Select all text
-    SendMessage(hEditField, EM_SETCHARFORMAT, SCF_ALL, (LPARAM)&cf);
-    SendMessage(hEditField, EM_SETSEL, -1, 0);  // Deselect text
-}
-
 
 } // namespace Core
