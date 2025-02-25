@@ -61,7 +61,7 @@ void ReplaceDialog::findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
     ft.chrg.cpMax = -1;
     ft.lpstrText  = searchStr;
 
-    int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, 0, (LPARAM)&ft) };
+    int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, FR_DOWN, (LPARAM)&ft) };
 
     if (foundPos != -1)
     {
@@ -88,7 +88,8 @@ void ReplaceDialog::findAndReplaceAllText(HWND hEditField, LPCTSTR searchStr,
 
     while (true)
     {
-        int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, 0, (LPARAM)&ft) };
+        int64_t foundPos{ SendMessage(
+            hEditField, EM_FINDTEXTEX, FR_DOWN, (LPARAM)&ft) };
         if (foundPos != -1)
         {
             SendMessage(hEditField, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
@@ -96,6 +97,10 @@ void ReplaceDialog::findAndReplaceAllText(HWND hEditField, LPCTSTR searchStr,
         }
         else
         {
+            MessageBox(NULL,
+                       _T("Text not found!"),
+                       _T("Replace"),
+                       MB_OK | MB_ICONINFORMATION);
             break;
         }
     }
