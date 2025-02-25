@@ -12,7 +12,7 @@ class FindDialog
     FindDialog(HWND mainWindohwnd);
 
     void searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
-                    BOOL matchCase);
+                    BOOL matchCase, BOOL matchWholeWord);
 
     void clearSelection(HWND hEditField);
 

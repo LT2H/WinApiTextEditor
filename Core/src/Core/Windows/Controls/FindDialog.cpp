@@ -50,33 +50,16 @@ FindDialog::FindDialog(HWND mainWindohwnd) : m_szFindWhat(80, L'\0')
 // }
 
 void FindDialog::searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
-                            BOOL matchCase)
+                            BOOL matchCase, BOOL matchWholeWord)
 {
     FINDTEXTEX ft{};
     CHARRANGE cr{};
     SendMessage(hEditField, EM_EXGETSEL, 0, (LPARAM)&cr); // Get current selection
 
-    int textLength{ GetWindowTextLength(hEditField) };
-
     if (searchDown)
     {
-        std::vector<wchar_t> nextChar(2);
-        TEXTRANGE tr{};
-        tr.chrg.cpMin = cr.cpMax;
-        tr.chrg.cpMax = cr.cpMax + 1;
-        tr.lpstrText  = nextChar.data();
-        SendMessage(hEditField, EM_GETTEXTRANGE, 0, (LPARAM)&tr);
-
-        if (nextChar[0] == '\r')
-        {
-            ft.chrg.cpMin = cr.cpMax + 2;
-            ft.chrg.cpMax = -1;
-        }
-        else
-        {
-            ft.chrg.cpMin = cr.cpMax + 1;
-            ft.chrg.cpMax = -1;
-        }
+        ft.chrg.cpMin = cr.cpMax;
+        ft.chrg.cpMax = -1;
     }
     else
     {
@@ -85,7 +68,11 @@ void FindDialog::searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
     }
     ft.lpstrText = searchStr;
 
-    int flags{ matchCase ? FR_MATCHCASE : 0 };
+    int flags{ searchDown ? FR_DOWN : 0 };
+    if (matchCase)
+        flags |= FR_MATCHCASE;
+    if (matchWholeWord)
+        flags |= FR_WHOLEWORD;
 
     int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, flags, (LPARAM)&ft) };
     if (foundPos != -1)

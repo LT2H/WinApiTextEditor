@@ -199,13 +199,18 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             {
                 BOOL searchDown{ (lpfr->Flags & FR_DOWN)
                                      ? TRUE
-                                     : FALSE }; // If FR_DOWN is set, search down;
-                                                // otherwise, search up
+                                     : FALSE }; // Search direction
+                BOOL matchCase{ (lpfr->Flags & FR_MATCHCASE) ? TRUE
+                                                             : FALSE }; // Match case
+                BOOL matchWholeWord{ (lpfr->Flags & FR_WHOLEWORD)
+                                         ? TRUE
+                                         : FALSE };                     // Whole word
 
                 m_findDialog->searchFile(it->second.getHwnd(),
                                          lpfr->lpstrFindWhat,
                                          searchDown,
-                                         (BOOL)(lpfr->Flags & FR_MATCHCASE));
+                                         matchCase,
+                                         matchWholeWord);
             }
 
             if (lpfr->Flags & FR_REPLACE)
