@@ -58,13 +58,25 @@ void FindDialog::searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
 
     int textLength{ GetWindowTextLength(hEditField) };
 
-    std::cout << textLength << "\n";
-
     if (searchDown)
     {
-        std::cout << "Searching downward\n";
-        ft.chrg.cpMin = cr.cpMax;
-        ft.chrg.cpMax = textLength;
+        std::vector<wchar_t> nextChar(2);
+        TEXTRANGE tr{};
+        tr.chrg.cpMin = cr.cpMax;
+        tr.chrg.cpMax = cr.cpMax + 1;
+        tr.lpstrText  = nextChar.data();
+        SendMessage(hEditField, EM_GETTEXTRANGE, 0, (LPARAM)&tr);
+
+        if (nextChar[0] == '\r')
+        {
+            ft.chrg.cpMin = cr.cpMax + 2;
+            ft.chrg.cpMax = -1;
+        }
+        else
+        {
+            ft.chrg.cpMin = cr.cpMax + 1;
+            ft.chrg.cpMax = -1;
+        }
     }
     else
     {
