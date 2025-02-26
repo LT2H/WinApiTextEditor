@@ -1,6 +1,7 @@
 #pragma once
-#include <windows.h>
 #include "utils.h"
+
+#include <windows.h>
 
 namespace Core
 {

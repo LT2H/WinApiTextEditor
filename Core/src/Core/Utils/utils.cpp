@@ -1,4 +1,5 @@
 #include "utils.h"
+
 #include <cstdio>
 #include <iostream>
 
@@ -12,7 +13,6 @@ void Core::enableDebugConsole()
         freopen_s(&fp, "CONOUT$", "w", stdout);
         freopen_s(&fp, "CONOUT$", "w", stderr);
 
-        // Optional debug message
         std::cout << "Debug console enabled\n";
     }
     else

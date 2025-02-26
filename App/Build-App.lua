@@ -23,6 +23,8 @@ project "App"
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
    objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
 
+    warnings "Extra" -- This enforces /W4 across all projects
+
    filter "system:windows"
        systemversion "latest"
        defines { "WINDOWS" }

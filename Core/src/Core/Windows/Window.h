@@ -23,8 +23,6 @@ class Window
 
     void registerReplaceDialog(ReplaceDialog* dialog);
 
-    void addMenu(std::unique_ptr<Menu> mainMenu);
-
     void registerFunc(Command command, std::function<void()> func);
 
     int registerHotkeys(std::span<Hotkey> m_hotkeys) const;
@@ -32,26 +30,27 @@ class Window
     static int promptSaveBeforeClose();
 
     static Window& initialize(HINSTANCE hInst, LPCWSTR cursorId, int color,
-                              std::wstring className, std::wstring windowName, int x,
-                              int y, int width, int height, HWND hwndParent);
+                              std::wstring_view className,
+                              std::wstring_view windowName, int x, int y, int width,
+                              int height, HWND hwndParent);
 
     static Window& getInstance();
 
   private:
-    Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring className,
-           std::wstring windowName, int x, int y, int width, int height,
+    Window() {};
+
+    Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring_view className,
+           std::wstring_view windowName, int x, int y, int width, int height,
            HWND hwndParent);
 
     WNDCLASS m_wc{};
     static HWND m_hwnd;
     static UINT m_findMsg;
     static std::unordered_map<std::wstring, Control> m_controls;
-    static std::unordered_map<int, HWND> m_control_handles;
+    static std::unordered_map<int, HWND> m_controlHandles;
     static FindDialog* m_findDialog;
     static ReplaceDialog* m_replaceDialog;
-    static std::vector<std::unique_ptr<Menu>> m_menus;
-
-    static std::unordered_map<Command, std::function<void()>> m_registered_funcs;
+    static std::unordered_map<Command, std::function<void()>> m_registeredFuncs;
 
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
 

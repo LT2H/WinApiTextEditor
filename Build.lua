@@ -4,9 +4,11 @@ workspace "WinApiTextEditor"
    configurations { "Debug", "Release"}
    startproject "App"
 
+   warnings "Extra" -- This enforces /W4 across all projects
+
    -- Workspace-wide build options for MSVC
    filter "system:windows"
-      buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
+      buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus", "/W4", "/w44365" }
 
 OutputDir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
 

@@ -1,7 +1,9 @@
 #include "Core/Utils/utils.h"
 #include "Core/Windows/Controls/Menu.h"
+#include "Core/Windows/Controls/FindDialog.h"
+
 #include "Window.h"
-#include <Core/Windows/Controls/FindDialog.h>
+
 #include <tchar.h>
 #include <string>
 #include <iostream>
@@ -11,18 +13,17 @@
 
 namespace Core
 {
-Window* Window::m_instance{ nullptr };
+Window* Window::m_instance{};
 UINT Window::m_findMsg{};
 HWND Window::m_hwnd{};
 std::unordered_map<std::wstring, Control> Window::m_controls{};
 FindDialog* Window::m_findDialog{};
 ReplaceDialog* Window::m_replaceDialog{};
-std::vector<std::unique_ptr<Menu>> Window::m_menus{};
-std::unordered_map<Command, std::function<void()>> Window::m_registered_funcs{};
+std::unordered_map<Command, std::function<void()>> Window::m_registeredFuncs{};
 
-Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring className,
-               std::wstring windowName, int x, int y, int width, int height,
-               HWND hwndParent)
+Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color,
+               std::wstring_view className, std::wstring_view windowName, int x,
+               int y, int width, int height, HWND hwndParent)
 {
     m_wc.hbrBackground = reinterpret_cast<HBRUSH>(color);
     m_wc.hCursor       = LoadCursor(nullptr, cursorId);
@@ -36,7 +37,7 @@ Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring classN
     }
 
     m_hwnd = CreateWindow(m_wc.lpszClassName,
-                          reinterpret_cast<wchar_t*>(windowName.data()),
+                          windowName.data(),
                           WS_OVERLAPPEDWINDOW | WS_VISIBLE,
                           x,
                           y,
@@ -49,8 +50,8 @@ Window::Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring classN
 }
 
 Window& Window::initialize(HINSTANCE hInst, LPCWSTR cursorId, int color,
-                           std::wstring className, std::wstring windowName, int x,
-                           int y, int width, int height, HWND hwndParent)
+                           std::wstring_view className, std::wstring_view windowName,
+                           int x, int y, int width, int height, HWND hwndParent)
 {
     if (!m_instance)
     {
@@ -95,14 +96,9 @@ void Window::registerReplaceDialog(ReplaceDialog* dialog)
     m_replaceDialog = dialog;
 }
 
-void Window::addMenu(std::unique_ptr<Menu> mainMenu)
-{
-    m_menus.push_back(std::move(mainMenu));
-}
-
 void Window::registerFunc(Command command, std::function<void()> func)
 {
-    m_registered_funcs[command] = func;
+    m_registeredFuncs[command] = func;
 }
 
 int Window::registerHotkeys(std::span<Hotkey> hotkeys) const
@@ -144,7 +140,6 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     case WM_CREATE:
     {
         m_findMsg = RegisterWindowMessage(FINDMSGSTRING); // Register find message
-        // m_replaceMsg = RegisterWindowMessage(FINDMSGSTRING); // Register replace
         // message Post a custom message to register controls after WM_CREATE
         // PostMessage(hwnd, WM_CREATE_CONTROLS, 0, 0);
     }
@@ -156,8 +151,8 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     case WM_COMMAND:
     {
         Command command{ LOWORD(wp) };
-        auto it{ m_registered_funcs.find(command) };
-        if (it != m_registered_funcs.end())
+        auto it{ m_registeredFuncs.find(command) };
+        if (it != m_registeredFuncs.end())
         {
             it->second();
         }
@@ -168,8 +163,8 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     case WM_HOTKEY:
     {
         Command hotkey{ LOWORD(wp) };
-        auto it{ m_registered_funcs.find(hotkey) };
-        if (it != m_registered_funcs.end())
+        auto it{ m_registeredFuncs.find(hotkey) };
+        if (it != m_registeredFuncs.end())
         {
             it->second();
         }
@@ -195,8 +190,8 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         {
         case IDYES:
         {
-            auto it{ m_registered_funcs.find(Core::Command::saveFile) };
-            if (it != m_registered_funcs.end())
+            auto it{ m_registeredFuncs.find(Core::Command::saveFile) };
+            if (it != m_registeredFuncs.end())
             {
                 it->second();
             }
@@ -232,11 +227,11 @@ LRESULT Window::windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             if (lpfr->Flags & FR_FINDNEXT)
             {
 
-                m_findDialog->searchFile(it->second.getHwnd(),
-                                         lpfr->lpstrFindWhat,
-                                         searchDown,
-                                         matchCase,
-                                         matchWholeWord);
+                m_findDialog->findText(it->second.getHwnd(),
+                                       lpfr->lpstrFindWhat,
+                                       searchDown,
+                                       matchCase,
+                                       matchWholeWord);
             }
 
             if (lpfr->Flags & FR_REPLACE)

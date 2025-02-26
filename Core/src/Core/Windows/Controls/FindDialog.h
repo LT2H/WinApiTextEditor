@@ -1,6 +1,6 @@
 #pragma once
-
 #include <windows.h>
+
 #include <vector>
 
 namespace Core
@@ -11,10 +11,10 @@ class FindDialog
     FindDialog() {};
     FindDialog(HWND mainWindohwnd);
 
-    void searchFile(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
-                    BOOL matchCase, BOOL matchWholeWord);
+    void findText(HWND hEditField, LPCTSTR searchStr, BOOL searchDown,
+                  BOOL matchCase, BOOL matchWholeWord);
 
-    HWND getHdlg() const { return m_hdlg; }
+    constexpr HWND getHdlg() const { return m_hdlg; }
     std::vector<wchar_t> getSZFindWhat() const { return m_szFindWhat; }
 
   private:

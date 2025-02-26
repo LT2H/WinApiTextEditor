@@ -2,28 +2,12 @@
 
 #include <windows.h>
 #include <Richedit.h>
+
 #include <tchar.h>
 #include <iostream>
 
 namespace Core
 {
-
-// Function to show Replace Dialog
-// void ShowReplaceDialog(HWND hwnd)
-//{
-//    ZeroMemory(&fr, sizeof(FINDREPLACE));
-//
-//    fr.lStructSize      = sizeof(FINDREPLACE);
-//    fr.hwndOwner        = hwnd;
-//    fr.lpstrFindWhat    = szFindText;
-//    fr.lpstrReplaceWith = szReplaceText;
-//    fr.wFindWhatLen     = sizeof(szFindText) / sizeof(TCHAR);
-//    fr.wReplaceWithLen  = sizeof(szReplaceText) / sizeof(TCHAR);
-//    fr.Flags            = FR_DOWN;
-//
-//    ReplaceText(&fr);
-//}
-
 ReplaceDialog::ReplaceDialog(HWND mainWindohwnd)
     : m_szFindWhat(80, L'\0'), m_szReplaceText(80, L'\0')
 {
@@ -56,7 +40,7 @@ void ReplaceDialog::findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
 {
     FINDTEXTEX ft{};
     CHARRANGE cr{};
-    SendMessage(hEditField, EM_EXGETSEL, 0, (LPARAM)&cr);
+    SendMessage(hEditField, EM_EXGETSEL, 0, reinterpret_cast<LPARAM>(&cr));
 
     ft.chrg.cpMin = cr.cpMax;
     ft.chrg.cpMax = -1;
@@ -72,12 +56,16 @@ void ReplaceDialog::findAndReplaceText(HWND hEditField, LPCTSTR searchStr,
         flags |= FR_WHOLEWORD;
     }
 
-    int64_t foundPos{ SendMessage(hEditField, EM_FINDTEXTEX, flags, (LPARAM)&ft) };
+    int64_t foundPos{ SendMessage(
+        hEditField, EM_FINDTEXTEX, flags, reinterpret_cast<LPARAM>(&ft)) };
 
     if (foundPos != -1)
     {
         SendMessage(hEditField, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
-        SendMessage(hEditField, EM_REPLACESEL, TRUE, (LPARAM)szReplaceText);
+        SendMessage(hEditField,
+                    EM_REPLACESEL,
+                    TRUE,
+                    reinterpret_cast<LPARAM>(szReplaceText));
     }
     else
     {
@@ -92,7 +80,7 @@ void ReplaceDialog::findAndReplaceAllText(HWND hEditField, LPCTSTR searchStr,
 {
     FINDTEXTEX ft{};
     CHARRANGE cr{};
-    SendMessage(hEditField, EM_EXGETSEL, 0, (LPARAM)&cr);
+    SendMessage(hEditField, EM_EXGETSEL, 0, reinterpret_cast<LPARAM>(&cr));
 
     ft.chrg.cpMin = cr.cpMax;
     ft.chrg.cpMax = -1;
@@ -111,11 +99,14 @@ void ReplaceDialog::findAndReplaceAllText(HWND hEditField, LPCTSTR searchStr,
     while (true)
     {
         int64_t foundPos{ SendMessage(
-            hEditField, EM_FINDTEXTEX, flags, (LPARAM)&ft) };
+            hEditField, EM_FINDTEXTEX, flags, reinterpret_cast<LPARAM>(&ft)) };
         if (foundPos != -1)
         {
             SendMessage(hEditField, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
-            SendMessage(hEditField, EM_REPLACESEL, TRUE, (LPARAM)szReplaceText);
+            SendMessage(hEditField,
+                        EM_REPLACESEL,
+                        TRUE,
+                        reinterpret_cast<LPARAM>(szReplaceText));
         }
         else
         {

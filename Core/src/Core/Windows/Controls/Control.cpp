@@ -8,8 +8,9 @@
 
 namespace Core
 {
-Control::Control(std::wstring className, std::wstring windowName, DWORD style, int x,
-                 int y, int width, int height, HWND hwndParent, Command command)
+Control::Control(std::wstring_view className, std::wstring_view windowName,
+                 DWORD style, int x, int y, int width, int height, HWND hwndParent,
+                 Command command)
     : m_className{ className }, m_windowName{ windowName }, m_style{ style },
       m_x{ x }, m_y{ y }, m_width{ width }, m_height{ height },
       m_hwndParent{ hwndParent }, m_command{ command }
@@ -27,11 +28,11 @@ Control::Control(std::wstring className, std::wstring windowName, DWORD style, i
                           nullptr);
 }
 
-Control::Control(std::wstring className, std::wstring windowName, DWORD style, int x,
-                 int y, int width, int height, HWND hwndParent)
+Control::Control(std::wstring_view className, std::wstring_view windowName,
+                 DWORD style, int x, int y, int width, int height, HWND hwndParent)
     : m_className{ className }, m_windowName{ windowName }, m_style{ style },
       m_x{ x }, m_y{ y }, m_width{ width }, m_height{ height },
-      m_hwndParent{ hwndParent }
+      m_hwndParent{ hwndParent }, m_command{}
 {
     m_hwnd = CreateWindow(className.data(),
                           windowName.data(),
@@ -46,10 +47,10 @@ Control::Control(std::wstring className, std::wstring windowName, DWORD style, i
                           nullptr);
 }
 
-Control::Control(std::wstring className, int x, int y, int width, int height,
+Control::Control(std::wstring_view className, int x, int y, int width, int height,
                  HWND hwndParent)
     : m_className{ className }, m_x{ x }, m_y{ y }, m_width{ width },
-      m_height{ height }, m_hwndParent{ hwndParent }
+      m_height{ height }, m_hwndParent{ hwndParent }, m_style{}
 {
     LoadLibrary(_T("Msftedit.dll")); // Load Rich Edit Library
     m_hwnd = CreateWindowEx(0,
