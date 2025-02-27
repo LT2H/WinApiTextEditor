@@ -1,15 +1,15 @@
+#include "Window.h"
 #include "Core/Utils/utils.h"
 #include "Core/Windows/Controls/Menu.h"
 #include "Core/Windows/Controls/FindDialog.h"
 
-#include "Window.h"
+#include <commdlg.h>
 
 #include <tchar.h>
 #include <string>
 #include <iostream>
 #include <unordered_map>
 #include <span>
-#include <commdlg.h>
 
 namespace Core
 {

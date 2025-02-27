@@ -1,11 +1,13 @@
 #pragma once
-#include <Core/Windows/Controls/Control.h>
-#include <Core/Windows/Controls/Menu.h>
-#include <Core/Windows/Controls/FindDialog.h>
-#include <Core/Windows/Controls/ReplaceDialog.h>
-#include <Core/utils/utils.h>
-#include <Core/utils/Hotkey.h>
+#include "Core/Windows/Controls/Control.h"
+#include "Core/Windows/Controls/Menu.h"
+#include "Core/Windows/Controls/FindDialog.h"
+#include "Core/Windows/Controls/ReplaceDialog.h"
+#include "Core/utils/utils.h"
+#include "Core/utils/Hotkey.h"
+
 #include <windows.h>
+
 #include <string>
 #include <span>
 #include <unordered_map>
@@ -47,7 +49,6 @@ class Window
     static HWND m_hwnd;
     static UINT m_findMsg;
     static std::unordered_map<std::wstring, Control> m_controls;
-    static std::unordered_map<int, HWND> m_controlHandles;
     static FindDialog* m_findDialog;
     static ReplaceDialog* m_replaceDialog;
     static std::unordered_map<Command, std::function<void()>> m_registeredFuncs;

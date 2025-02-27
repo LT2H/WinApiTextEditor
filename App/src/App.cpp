@@ -1,4 +1,3 @@
-#include "Core/Core.h"
 #include "Core/WinApp.h"
 #include "Core/Windows/Window.h"
 #include "Core/Windows/Controls/Control.h"
@@ -23,7 +22,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
                                                        IDC_ARROW,
                                                        COLOR_WINDOW,
                                                        L"myWindowClass",
-                                                       L"My Title",
+                                                       L"WinApi Text Editor",
                                                        100,
                                                        100,
                                                        800,

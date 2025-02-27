@@ -11,6 +11,12 @@ int WinApp::run()
         TranslateMessage(&m_msg);
         DispatchMessage(&m_msg);
     }
-    return 0;
+
+    if (m_msg.message == WM_QUIT)
+    {
+        return 0;
+    }
+    return -1;
 }
+
 } // namespace Core

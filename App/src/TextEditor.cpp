@@ -140,7 +140,7 @@ void TextEditor::saveFileAs(HWND hwnd, const Core::Control& editField)
     ofn.hwndOwner    = hwnd;
     ofn.lpstrFile    = fileName.data();
     ofn.nMaxFile     = static_cast<DWORD>(fileName.size());
-    ofn.lpstrFilter  = L"All Files\0*.*\0Source Files\0*.CPP\0Text Files\0*.TXT\0";
+    ofn.lpstrFilter  = L"Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0";
     ofn.nFilterIndex = 1;
     ofn.Flags = OFN_OVERWRITEPROMPT; // This will show a built-in overwrite warning
 
@@ -190,27 +190,6 @@ void TextEditor::showReplaceDialog(HWND mainWindowHwnd)
 
     Core::Window::getInstance().registerReplaceDialog(m_replaceDialog.get());
 }
-
-// void FindNextText()
-//{
-//     FINDTEXTEX ft{};
-//     ft.chrg.cpMin = 0;          // Start searching from the beginning
-//     ft.chrg.cpMax = -1;         // Search till the end
-//     ft.lpstrText  = szFindText; // Text to search
-//
-//     int foundPos = SendMessage(hEdit, EM_FINDTEXTEX, FR_DOWN, (LPARAM)&ft);
-//     if (foundPos != -1)
-//     {
-//         // Select the found text
-//         SendMessage(hEdit, EM_SETSEL, ft.chrgText.cpMin, ft.chrgText.cpMax);
-//         SendMessage(hEdit, EM_SCROLLCARET, 0, 0); // Scroll to selection
-//     }
-//     else
-//     {
-//         MessageBox(
-//             NULL, _T("Text not found!"), _T("Find"), MB_OK | MB_ICONINFORMATION);
-//     }
-// }
 
 void TextEditor::launchNewWindow()
 {

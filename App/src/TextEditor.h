@@ -43,6 +43,7 @@ class TextEditor
   private:
     std::wstring m_currentFilePath{};
     Core::Control m_editField;
+
     std::array<Core::Hotkey, 8> m_hotkeys{ {
         { MOD_CONTROL, Core::Command::openFile, 'O' },
         { MOD_CONTROL, Core::Command::saveFile, 'S' },
