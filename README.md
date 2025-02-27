@@ -1,24 +1,46 @@
-# C++ Project Starter Template
+# WinApi Text Editor
+A basic text editor built with the Windows API and C++20.
+![test](https://github.com/user-attachments/assets/afe02826-8b85-43fe-835b-66580c0285dc)
+# Features
+**File Operations**
+- Create New Window
+- Create New File
+- Open Existing File
+- Save
+- Save As
+- Prompt to Save Before Exiting
 
-This is a little quick-start project template for C++ projects which utilise a Core/App project architecture. There are two included projects - one called _Core_, and one called _App_. [Premake](https://github.com/premake/premake-core) is used to generate project files.
+**Edit Operations**
+- Cut, Copy, and Paste
+- Undo and Redo
+- Select All
+- Find
+  - Match Whole Word
+  - Match Case
+  - Direction (Up/Down)
+- Replace/Replace All
+  - Match Whole Word
+  - Match Case
 
-Core builds into a static library and is meant to contain common code intended for use in multiple applications. App builds into an executable and links the Core static library, as well as provides an include path to Core's code.
+**Hotkeys**
+  - Displayed Next to Controls
 
-The `Scripts/` directory contains build scripts for Windows and Linux, and the `Vendor/` directory contains Premake binaries (currently version `5.0-beta2`).
+## Technical Details
+  - Language: C++
+  - Standard: C++20
+  - Dependencies: WinApi
+  - Build System: [Premake5](https://premake.github.io)
+  - Template: This project is based on [TheCherno/ProjectTemplate](https://github.com/TheCherno/ProjectTemplate)
 
 ## Getting Started
-1. Clone this repository or use the "Use this template" button on GitHub to quickly set up your own repository based on this template
-2. `App/` and `Core/` are the two projects - you can edit the names of these folders and their contents to suit
-3. The three included Premake build files are `Build.lua`, `Core/Build-Core.lua` and `App/Build-App.lua` - you can edit these to customise your build configurations, edit the names of your projects and workspace/solution, etc.
-4. Open the `Scripts/` directory and run the appropriate `Setup` script to generate projects files. You can edit the setup scripts to change the type of project that is generated - out of the box they are set to Visual Studio 2022 for Windows and gmake2 for Linux.
-
-Note that no macOS setup script is currently provided; you can duplicate the Linux script and adjust accordingly.
-
-## Included
-- Some example code (in `App/Source` and `Core/Source`) to provide a starting point and test
-- Simple `.gitignore` to ignore project files and binaries
-- Premake binaries for Win/Mac/Linux (`v5.0-beta2`)
+1. Clone this repository:
+    ```sh
+    git clone https://github.com/LT2H/WinApiTextEditor.git
+   
+2. Open the `Scripts` directory and run `Setup-Window.bat`. This script uses Premake5 inside the `Vendor/Binaries/Premake` directory to generate a `.sln` file. By default, it is configured for Visual Studio 2022 on Windows.
+   ```sh
+   cd Scripts && Vendor/Binaries/Premake/Setup-Window.bat
 
 ## License
-- UNLICENSE for this repository (see `UNLICENSE.txt` for more details)
+- This repository is licensed under UNLICENSE (see UNLICENSE.txt for details).
 - Premake is licensed under BSD 3-Clause (see included LICENSE.txt file for more details)
