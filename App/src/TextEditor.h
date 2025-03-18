@@ -18,7 +18,6 @@ class TextEditor
   public:
     TextEditor();
 
-
     void openFile(HWND hwnd, const Core::Control& editField);
 
     void saveFile(HWND hwnd, const Core::Control& editField);
@@ -39,7 +38,7 @@ class TextEditor
 
     void selectAll();
 
-  private: // member variables
+  private:
     std::wstring m_currentFilePath{};
     Core::Control m_editField;
 

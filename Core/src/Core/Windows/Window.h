@@ -39,12 +39,6 @@ class Window
     static Window& getInstance();
 
   private:
-    Window() {};
-
-    Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring_view className,
-           std::wstring_view windowName, int x, int y, int width, int height,
-           HWND hwndParent);
-
     WNDCLASS m_wc{};
     static HWND m_hwnd;
     static UINT m_findMsg;
@@ -53,8 +47,15 @@ class Window
     static ReplaceDialog* m_replaceDialog;
     static std::unordered_map<Command, std::function<void()>> m_registeredFuncs;
 
-    static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
-
     static Window* m_instance;
+
+  private: // member functions
+    Window() {};
+
+    Window(HINSTANCE hInst, LPCWSTR cursorId, int color, std::wstring_view className,
+           std::wstring_view windowName, int x, int y, int width, int height,
+           HWND hwndParent);
+
+    static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
 };
 } // namespace Core
