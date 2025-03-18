@@ -39,7 +39,7 @@ A basic text editor built with the Windows API and C++20.
    
 2. Open the `Scripts` directory and run `Setup-Window.bat`. This script uses Premake5 inside the `Vendor/Binaries/Premake` directory to generate a `.sln` file. By default, it is configured for Visual Studio 2022 on Windows.
    ```sh
-   cd Scripts && Vendor/Binaries/Premake/Setup-Window.bat
+   cd WinApiTextEditor\Scripts && Vendor\Binaries\Premake\Setup-Window.bat
 
 ## License
 - This repository is licensed under UNLICENSE (see UNLICENSE.txt for details).
