@@ -50,7 +50,11 @@ TextEditor::TextEditor()
 
     fileMenu.appendMenu(MF_SEPARATOR);
 
-    fileMenu.appendMenu(MF_STRING, Core::Command::exit, L"Exit");
+    fileMenu.appendMenu(MF_STRING,
+                        Core::Command::exit,
+                        L"Exit",
+                        [this, mainWindowHwnd]()
+                        { PostMessage(mainWindowHwnd, WM_CLOSE, 0, 0); });
 
     editMenu.appendMenu(MF_STRING,
                         Core::Command::selectAll,
