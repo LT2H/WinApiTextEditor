@@ -18,7 +18,6 @@ class TextEditor
   public:
     TextEditor();
 
-    int displayFile(const std::wstring& path, const Core::Control& editField);
 
     void openFile(HWND hwnd, const Core::Control& editField);
 
@@ -40,7 +39,7 @@ class TextEditor
 
     void selectAll();
 
-  private:
+  private: // member variables
     std::wstring m_currentFilePath{};
     Core::Control m_editField;
 
@@ -57,4 +56,7 @@ class TextEditor
 
     std::unique_ptr<Core::FindDialog> m_findDialog;
     std::unique_ptr<Core::ReplaceDialog> m_replaceDialog;
+
+  private: // member functions
+    int displayFile(const std::wstring& path, const Core::Control& editField);
 };
