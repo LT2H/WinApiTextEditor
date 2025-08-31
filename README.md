@@ -1,5 +1,5 @@
 # WinApi Text Editor
-A basic text editor built with the Windows API and C++20.
+A basic text editor built with the Windows API.
 
 ![test](https://github.com/user-attachments/assets/afe02826-8b85-43fe-835b-66580c0285dc)
 # Features
